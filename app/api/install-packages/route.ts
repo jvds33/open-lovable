@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import type { Sandbox } from 'computesdk';
 
 declare global {
-  var activeSandbox: any;
+  var activeSandbox: Sandbox | null;
   var activeSandboxProvider: any;
   var sandboxData: any;
 }
@@ -141,14 +142,9 @@ export async function POST(request: NextRequest) {
             alreadyInstalled: validPackages
           });
           
-          // Restart dev server
-          await sendProgress({ type: 'status', message: 'Restarting development server...' });
-          
-          await providerInstance.restartViteServer();
-          
           await sendProgress({ 
             type: 'complete', 
-            message: 'Dev server restarted!',
+            message: 'All packages installed.',
             installedPackages: []
           });
           

@@ -20,6 +20,7 @@ pnpm install  # or npm install / yarn install
 # REQUIRED
 # =================================================================
 FIRECRAWL_API_KEY=your_firecrawl_api_key    # https://firecrawl.dev
+COMPUTESDK_API_KEY=your_api_key_here        # https://computesdk.com
 
 # =================================================================
 # AI PROVIDER - Choose your LLM
@@ -35,9 +36,8 @@ GROQ_API_KEY=your_groq_api_key            # https://console.groq.com
 MORPH_API_KEY=your_morphllm_api_key    # https://morphllm.com/dashboard
 
 # =================================================================
-# SANDBOX PROVIDER - Choose ONE: Vercel (default) or E2B
+# SANDBOX PROVIDER - Choose Vercel, E2B, Modal, or Daytona
 # =================================================================
-SANDBOX_PROVIDER=vercel  # or 'e2b'
 
 # Option 1: Vercel Sandbox (default)
 # Choose one authentication method:
@@ -53,6 +53,18 @@ VERCEL_OIDC_TOKEN=auto_generated_by_vercel_env_pull
 
 # Option 2: E2B Sandbox
 # E2B_API_KEY=your_e2b_api_key      # https://e2b.dev
+
+# Option 3: Modal Sandbox
+# MODAL_TOKEN_ID=your_token_id      # https://modal.com
+# MODAL_TOKEN_SECRET=your_token_secret
+
+# Option 4: Daytona Sandbox
+# DAYTONA_API_KEY=your_api_key      # https://daytona.io
+
+# Option 5: Railway Sandbox
+# RAILWAY_API_KEY=your_railway_api_key       # https://railway.com/deploy/sandbox
+# RAILWAY_PROJECT_ID=your_railway_project_id
+# RAILWAY_ENVIRONMENT_ID=your_railway_environment_id
 ```
 
 3. **Run**

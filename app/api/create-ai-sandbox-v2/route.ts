@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { SandboxFactory } from '@/lib/sandbox/factory';
-// SandboxProvider type is used through SandboxFactory
+import { ComputeProvider } from '@/lib/sandbox/providers/compute-provider';
 import type { SandboxState } from '@/types/sandbox';
 import { sandboxManager } from '@/lib/sandbox/sandbox-manager';
 
@@ -37,8 +36,8 @@ export async function POST() {
       global.existingFiles = new Set<string>();
     }
 
-    // Create new sandbox using factory
-    const provider = SandboxFactory.create();
+    // Create new sandbox using ComputeProvider
+    const provider = new ComputeProvider();
     const sandboxInfo = await provider.createSandbox();
     
     console.log('[create-ai-sandbox-v2] Setting up Vite React app...');
@@ -61,7 +60,6 @@ export async function POST() {
         lastSync: Date.now(),
         sandboxId: sandboxInfo.sandboxId
       },
-      sandbox: provider, // Store the provider instead of raw sandbox
       sandboxData: {
         sandboxId: sandboxInfo.sandboxId,
         url: sandboxInfo.url

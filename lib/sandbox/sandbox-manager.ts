@@ -1,7 +1,7 @@
 import { SandboxProvider } from './types';
-import { SandboxFactory } from './factory';
+import { ComputeProvider } from './providers/compute-provider';
 
-interface SandboxInfo {
+interface ManagedSandboxInfo {
   sandboxId: string;
   provider: SandboxProvider;
   createdAt: Date;
@@ -9,7 +9,7 @@ interface SandboxInfo {
 }
 
 class SandboxManager {
-  private sandboxes: Map<string, SandboxInfo> = new Map();
+  private sandboxes: Map<string, ManagedSandboxInfo> = new Map();
   private activeSandboxId: string | null = null;
 
   /**
@@ -23,34 +23,8 @@ class SandboxManager {
       return existing.provider;
     }
 
-    // Try to reconnect to existing sandbox
-    
-    try {
-      const provider = SandboxFactory.create();
-      
-      // For E2B provider, try to reconnect
-      if (provider.constructor.name === 'E2BProvider') {
-        // E2B sandboxes can be reconnected using the sandbox ID
-        const reconnected = await (provider as any).reconnect(sandboxId);
-        if (reconnected) {
-          this.sandboxes.set(sandboxId, {
-            sandboxId,
-            provider,
-            createdAt: new Date(),
-            lastAccessed: new Date()
-          });
-          this.activeSandboxId = sandboxId;
-          return provider;
-        }
-      }
-      
-      // For Vercel or if reconnection failed, return the new provider
-      // The caller will need to handle creating a new sandbox
-      return provider;
-    } catch (error) {
-      console.error(`[SandboxManager] Error reconnecting to sandbox ${sandboxId}:`, error);
-      throw error;
-    }
+    // Create a new provider - caller will need to handle sandbox creation
+    return new ComputeProvider();
   }
 
   /**
@@ -161,7 +135,8 @@ class SandboxManager {
 }
 
 // Export singleton instance
-export const sandboxManager = new SandboxManager();
+// Use existing global instance if available to persist state across hot reloads
+export const sandboxManager = global.sandboxManager || new SandboxManager();
 
 // Also maintain backward compatibility with global state
 declare global {
@@ -169,4 +144,6 @@ declare global {
 }
 
 // Ensure the global reference points to our singleton
-global.sandboxManager = sandboxManager;
+if (!global.sandboxManager) {
+  global.sandboxManager = sandboxManager;
+}

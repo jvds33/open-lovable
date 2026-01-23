@@ -351,8 +351,8 @@ export async function POST(request: NextRequest) {
     if (!provider) {
       console.log(`[apply-ai-code-stream] No active provider found, creating new sandbox...`);
       try {
-        const { SandboxFactory } = await import('@/lib/sandbox/factory');
-        provider = SandboxFactory.create();
+        const { ComputeProvider } = await import('@/lib/sandbox/providers/compute-provider');
+        provider = new ComputeProvider();
         const sandboxInfo = await provider.createSandbox();
         await provider.setupViteApp();
 
@@ -628,13 +628,7 @@ export async function POST(request: NextRequest) {
               fileContent = fileContent.replace(/shadow-5xl/g, 'shadow-2xl');
             }
 
-            // Create directory if needed
-            const dirPath = normalizedPath.includes('/') ? normalizedPath.substring(0, normalizedPath.lastIndexOf('/')) : '';
-            if (dirPath) {
-              await providerInstance.runCommand(`mkdir -p ${dirPath}`);
-            }
-
-            // Write the file using provider
+            // Write the file using provider (writeFile handles mkdir internally)
             await providerInstance.writeFile(normalizedPath, fileContent);
 
             // Update file cache
