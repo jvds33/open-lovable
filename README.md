@@ -36,7 +36,7 @@ GROQ_API_KEY=your_groq_api_key            # https://console.groq.com
 MORPH_API_KEY=your_morphllm_api_key    # https://morphllm.com/dashboard
 
 # =================================================================
-# SANDBOX PROVIDER - Choose Vercel, E2B, Modal, or Daytona
+# SANDBOX PROVIDER - Choose Vercel, E2B, Modal, Daytona, Railway, Namespace, Render, Blaxel
 # =================================================================
 
 # Option 1: Vercel Sandbox (default)
@@ -65,6 +65,18 @@ VERCEL_OIDC_TOKEN=auto_generated_by_vercel_env_pull
 # RAILWAY_API_KEY=your_railway_api_key       # https://railway.com/deploy/sandbox
 # RAILWAY_PROJECT_ID=your_railway_project_id
 # RAILWAY_ENVIRONMENT_ID=your_railway_environment_id
+
+# Option 6: Namespace Sandbox
+# NSC_TOKEN=your_namespace_nsc_token       # https://namespace.so/
+
+# Option 7: Render Sandbox
+# RENDER_API_KEY=your_render_api_key      # https://render.com/
+# RENDER_OWNER_ID=your_render_owner_id
+
+# Option 8: Blaxel Sandbox
+BL_API_KEY=your_bl_api_key      # https://blaxel.ai/
+BL_WORKSPACE=your_bl_workspace
+
 ```
 
 3. **Run**
