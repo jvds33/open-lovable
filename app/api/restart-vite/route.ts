@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
+import type { Sandbox } from 'computesdk';
 
 declare global {
-  var activeSandbox: any;
+  var activeSandbox: Sandbox | null;
   var activeSandboxProvider: any;
   var lastViteRestartTime: number;
   var viteRestartInProgress: boolean;

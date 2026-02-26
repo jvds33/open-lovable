@@ -39,13 +39,8 @@ export interface SandboxProviderConfig {
 }
 
 export abstract class SandboxProvider {
-  protected config: SandboxProviderConfig;
   protected sandbox: any;
   protected sandboxInfo: SandboxInfo | null = null;
-
-  constructor(config: SandboxProviderConfig) {
-    this.config = config;
-  }
 
   abstract createSandbox(): Promise<SandboxInfo>;
   abstract runCommand(command: string): Promise<CommandResult>;

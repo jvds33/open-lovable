@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import type { Sandbox } from 'computesdk';
 
 declare global {
-  var activeSandbox: any;
+  var activeSandbox: Sandbox | null;
 }
 
 export async function POST(request: NextRequest) {

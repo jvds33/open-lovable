@@ -1,4 +1,5 @@
 // Global types for sandbox file management
+import type { Sandbox } from 'computesdk';
 
 export interface SandboxFile {
   content: string;
@@ -14,7 +15,6 @@ export interface SandboxFileCache {
 
 export interface SandboxState {
   fileCache: SandboxFileCache | null;
-  sandbox: any; // E2B sandbox instance
   sandboxData: {
     sandboxId: string;
     url: string;
@@ -23,7 +23,7 @@ export interface SandboxState {
 
 // Declare global types
 declare global {
-  var activeSandbox: any;
+  var activeSandbox: Sandbox | null;
   var sandboxState: SandboxState;
   var existingFiles: Set<string>;
 }
