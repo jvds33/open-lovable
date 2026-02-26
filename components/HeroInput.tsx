@@ -9,6 +9,7 @@ interface HeroInputProps {
   placeholder?: string;
   className?: string;
   showSearchFeatures?: boolean;
+  disabled?: boolean;
 }
 
 function isURL(str: string): boolean {
@@ -17,13 +18,14 @@ function isURL(str: string): boolean {
   return urlPattern.test(str.trim());
 }
 
-export default function HeroInput({ 
-  value, 
-  onChange, 
-  onSubmit, 
+export default function HeroInput({
+  value,
+  onChange,
+  onSubmit,
   placeholder = "Describe what you want to build...",
   className = "",
-  showSearchFeatures = true
+  showSearchFeatures = true,
+  disabled = false
 }: HeroInputProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [showTiles, setShowTiles] = useState(false);
@@ -48,7 +50,7 @@ export default function HeroInput({
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      onSubmit();
+      if (!disabled) onSubmit();
     }
   };
 
@@ -134,18 +136,20 @@ export default function HeroInput({
         <div className="p-10 flex justify-end items-center relative">
           <button
             onClick={onSubmit}
-            disabled={!value.trim()}
+            disabled={!value.trim() || disabled}
             className={`
               button relative rounded-10 px-8 py-8 text-label-medium font-medium
               flex items-center justify-center gap-6
-              ${value.trim() 
-                ? 'button-primary text-accent-white active:scale-[0.995]' 
+              ${value.trim() && !disabled
+                ? 'button-primary text-accent-white active:scale-[0.995]'
                 : 'bg-black-alpha-4 text-black-alpha-24 cursor-not-allowed'
               }
             `}
           >
-            {value.trim() && <div className="button-background absolute inset-0 rounded-10 pointer-events-none" />}
-            {value.trim() ? (
+            {value.trim() && !disabled && <div className="button-background absolute inset-0 rounded-10 pointer-events-none" />}
+            {disabled ? (
+              <span className="px-6 relative">Generating…</span>
+            ) : value.trim() ? (
               <>
                 <span className="px-6 relative">Re-imagine Site</span>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

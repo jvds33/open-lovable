@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: claude-bridge
+    runtime: docker
+    dockerfilePath: api/python/Dockerfile
+    dockerContext: api/python
+    region: oregon
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_API_PORT
+        value: "8000"
+    autoDeploy: true

@@ -3927,6 +3927,7 @@ Focus on the key sections and content, making it clean and modern.`;
               onSubmit={sendChatMessage}
               placeholder="Describe what you want to build..."
               showSearchFeatures={false}
+              disabled={generationProgress.isGenerating || generationProgress.isStreaming}
             />
           </div>
         </div>
