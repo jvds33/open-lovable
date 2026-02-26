@@ -1,5 +1,6 @@
 import { Sandbox } from '@vercel/sandbox';
 import { SandboxProvider, SandboxInfo, CommandResult } from '../types';
+import { appConfig } from '@/config/app.config';
 // SandboxProviderConfig available through parent class
 
 export class VercelProvider extends SandboxProvider {
@@ -22,9 +23,9 @@ export class VercelProvider extends SandboxProvider {
       this.existingFiles.clear();
 
       // Create Vercel sandbox
-      
+
       const sandboxConfig: any = {
-        timeout: 300000, // 5 minutes in ms
+        timeout: appConfig.vercelSandbox.timeoutMs, // Use config timeout (30 minutes)
         runtime: 'node22', // Use node22 runtime for Vercel sandboxes
         ports: [5173] // Vite port
       };

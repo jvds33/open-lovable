@@ -57,3 +57,15 @@ e2b-template-*
 repomix-output.txt
 bun.lockb
 .env*.local
+
+# Claude CLI local config
+.claude/
+
+# Design iterations
+.superdesign/
+
+# Runtime logs
+logs/
+
+# Temporary source files
+src/

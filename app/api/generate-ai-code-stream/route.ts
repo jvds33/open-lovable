@@ -91,13 +91,328 @@ declare global {
 export async function POST(request: NextRequest) {
   try {
     const { prompt, model = 'openai/gpt-oss-20b', context, isEdit = false } = await request.json();
-    
+
     console.log('[generate-ai-code-stream] Received request:');
     console.log('[generate-ai-code-stream] - prompt:', prompt);
     console.log('[generate-ai-code-stream] - isEdit:', isEdit);
     console.log('[generate-ai-code-stream] - context.sandboxId:', context?.sandboxId);
     console.log('[generate-ai-code-stream] - context.currentFiles:', context?.currentFiles ? Object.keys(context.currentFiles) : 'none');
     console.log('[generate-ai-code-stream] - currentFiles count:', context?.currentFiles ? Object.keys(context.currentFiles).length : 0);
+
+    // Check if Claude Code CLI mode is enabled
+    const aiProviderMode = process.env.AI_PROVIDER_MODE;
+    const claudeCodeEnabled = process.env.CLAUDE_CODE_ENABLED === 'true';
+
+    console.log('[generate-ai-code-stream] AI Provider Mode:', aiProviderMode);
+    console.log('[generate-ai-code-stream] Claude Code Enabled:', claudeCodeEnabled);
+
+    // If using Claude Code CLI mode, forward to Python API
+    if (aiProviderMode === 'cli' && claudeCodeEnabled) {
+      console.log('[generate-ai-code-stream] Using Claude Code CLI mode, forwarding to Python API...');
+
+      const pythonApiUrl = process.env.PYTHON_API_URL || 'http://localhost:8000';
+
+      try {
+        // Build the system prompt for Claude Code SDK
+        // Important: Claude Code SDK expects Claude to use Write/Edit tools, not output XML tags
+        const systemPrompt = `You are Claude Code, an AI coding assistant. You have Write, Edit, Read, and other tools available.
+
+CRITICAL: DO NOT explain what you're going to do. IMMEDIATELY start using the Write tool to create files.
+
+${isEdit ? 'EDIT MODE: Use Edit tool to modify the requested files.' : `CREATE MODE: Immediately create these files using Write tool:
+
+1. Write src/index.css with:
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+2. Write src/App.jsx - main React component with Tailwind styling
+3. Write src/components/*.jsx - all necessary components
+
+IMPORTANT:
+- Use Write tool for EVERY file (Write file_path="src/App.jsx" content="...")
+- Use Tailwind CSS classes for styling (className="...")
+- Create complete, working code - NO placeholders
+- DO NOT create package.json, vite.config.js, tailwind.config.js (they exist)
+
+START NOW - Write src/index.css first, then App.jsx, then components. NO explanations.`}`;
+
+        // Forward the request to Python API
+        const pythonResponse = await fetch(`${pythonApiUrl}/api/claude-code/generate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt,
+            model: model.replace('anthropic/', ''), // Remove provider prefix
+            session_id: context?.sandboxId,
+            is_edit: isEdit,
+            system_prompt: systemPrompt, // Add system prompt
+          }),
+        });
+
+        if (!pythonResponse.ok) {
+          throw new Error(`Python API error: ${pythonResponse.statusText}`);
+        }
+
+        console.log('[generate-ai-code-stream] Python API responded, starting to stream...');
+
+        // Important: We need to actively read and forward the stream
+        // Simply passing pythonResponse.body might not trigger the generator
+        const reader = pythonResponse.body?.getReader();
+        if (!reader) {
+          throw new Error('Python API response body is not readable');
+        }
+
+        const stream = new ReadableStream({
+          async start(controller) {
+            console.log('[generate-ai-code-stream] Stream started, reading from Python API...');
+            const decoder = new TextDecoder();
+            const encoder = new TextEncoder();
+            let buffer = '';
+            let filesGenerated: any[] = [];
+            let componentCount = 0;
+            let savedGeneratedCode = '';
+
+            try {
+              while (true) {
+                const { done, value } = await reader.read();
+                if (done) {
+                  console.log('[generate-ai-code-stream] Stream completed');
+                  break;
+                }
+
+                // Decode the chunk and add to buffer
+                buffer += decoder.decode(value, { stream: true });
+
+                // Process complete SSE messages (lines ending with \n\n)
+                const lines = buffer.split('\n');
+
+                // Keep incomplete line in buffer
+                buffer = lines.pop() || '';
+
+                for (const line of lines) {
+                  if (!line.trim() || !line.startsWith('data: ')) continue;
+
+                  try {
+                    // Parse the SSE message
+                    const jsonStr = line.slice(6); // Remove "data: " prefix
+                    const pythonMsg = JSON.parse(jsonStr);
+
+                    console.log('[generate-ai-code-stream] Python message:', pythonMsg.type);
+
+                    let frontendMsg: any = null;
+
+                    // Transform Python API messages to frontend-expected format
+                    switch (pythonMsg.type) {
+                      case 'system':
+                        // Python sends system initialization messages
+                        // Frontend expects "status" messages
+                        frontendMsg = {
+                          type: 'status',
+                          message: pythonMsg.content || 'Claude Code SDK initialized'
+                        };
+                        break;
+
+                      case 'text':
+                        // Python sends text messages with content
+                        // Frontend expects "stream" type with file tags
+                        if (pythonMsg.content) {
+                          // Check if content contains file tags
+                          if (pythonMsg.content.includes('<file')) {
+                            frontendMsg = {
+                              type: 'stream',
+                              text: pythonMsg.content,
+                              raw: true
+                            };
+                          } else {
+                            // Regular text content
+                            frontendMsg = {
+                              type: 'conversation',
+                              text: pythonMsg.content
+                            };
+                          }
+                        }
+                        break;
+
+                      case 'tool_use':
+                        // Python sends tool use notifications
+                        // Frontend expects "status" messages
+                        if (pythonMsg.tool_name) {
+                          let statusMessage = '';
+                          switch (pythonMsg.tool_name) {
+                            case 'Write':
+                              statusMessage = `Creating file: ${pythonMsg.parameters?.file_path || ''}`;
+                              break;
+                            case 'Edit':
+                              statusMessage = `Editing file: ${pythonMsg.parameters?.file_path || ''}`;
+                              break;
+                            case 'Read':
+                              statusMessage = `Reading file: ${pythonMsg.parameters?.file_path || ''}`;
+                              break;
+                            default:
+                              statusMessage = `Executing tool: ${pythonMsg.tool_name}`;
+                          }
+
+                          frontendMsg = {
+                            type: 'status',
+                            message: statusMessage
+                          };
+                        }
+                        break;
+
+                      case 'files_generated':
+                        // Python sends files_generated with list of files and generatedCode
+                        // Frontend expects "component" messages for each file
+                        if (pythonMsg.files && Array.isArray(pythonMsg.files)) {
+                          filesGenerated = pythonMsg.files;
+
+                          // Save the generatedCode from Python API
+                          if (pythonMsg.generatedCode) {
+                            savedGeneratedCode = pythonMsg.generatedCode;
+                          }
+
+                          // Send component message for each file
+                          for (const file of pythonMsg.files) {
+                            componentCount++;
+                            const componentName = file.path.split('/').pop()?.replace(/\.(jsx?|tsx?)$/, '') || 'Component';
+
+                            const componentMsg = {
+                              type: 'component',
+                              name: componentName,
+                              path: file.path,
+                              index: componentCount
+                            };
+
+                            const componentData = `data: ${JSON.stringify(componentMsg)}\n\n`;
+                            controller.enqueue(encoder.encode(componentData));
+                          }
+
+                          // Don't set frontendMsg here since we already sent component messages
+                          continue;
+                        }
+                        break;
+
+                      case 'complete':
+                        // Python sends complete message
+                        // Frontend expects "complete" with generatedCode field
+
+                        // Use savedGeneratedCode from files_generated message
+                        // If not available, construct it from collected files
+                        let generatedCode = savedGeneratedCode;
+                        if (!generatedCode && filesGenerated.length > 0) {
+                          for (const file of filesGenerated) {
+                            generatedCode += `<file path="${file.path}">\n${file.content}\n</file>\n\n`;
+                          }
+                        }
+
+                        frontendMsg = {
+                          type: 'complete',
+                          generatedCode: generatedCode,
+                          explanation: pythonMsg.explanation || 'Code generation completed!',
+                          files: filesGenerated.length,
+                          components: componentCount
+                        };
+                        break;
+
+                      case 'error':
+                        // Forward error messages
+                        frontendMsg = {
+                          type: 'error',
+                          error: pythonMsg.message || pythonMsg.error || 'Unknown error'
+                        };
+                        break;
+
+                      case 'status':
+                        // Forward status messages as-is
+                        frontendMsg = {
+                          type: 'status',
+                          message: pythonMsg.message || pythonMsg.status
+                        };
+                        break;
+
+                      default:
+                        console.log('[generate-ai-code-stream] Unknown Python message type:', pythonMsg.type);
+                        // Forward unknown messages as-is
+                        frontendMsg = pythonMsg;
+                    }
+
+                    // Send transformed message to frontend
+                    if (frontendMsg) {
+                      const sseData = `data: ${JSON.stringify(frontendMsg)}\n\n`;
+                      controller.enqueue(encoder.encode(sseData));
+                    }
+
+                  } catch (parseError) {
+                    console.error('[generate-ai-code-stream] Failed to parse Python message:', parseError, 'Line:', line);
+                  }
+                }
+              }
+
+              // Process any remaining buffer
+              if (buffer.trim() && buffer.startsWith('data: ')) {
+                try {
+                  const jsonStr = buffer.slice(6);
+                  const pythonMsg = JSON.parse(jsonStr);
+
+                  // Transform and forward final message
+                  if (pythonMsg.type === 'complete') {
+                    // Use savedGeneratedCode if available
+                    let generatedCode = savedGeneratedCode;
+                    if (!generatedCode && filesGenerated.length > 0) {
+                      for (const file of filesGenerated) {
+                        generatedCode += `<file path="${file.path}">\n${file.content}\n</file>\n\n`;
+                      }
+                    }
+
+                    const frontendMsg = {
+                      type: 'complete',
+                      generatedCode: generatedCode,
+                      explanation: pythonMsg.explanation || 'Code generation completed!',
+                      files: filesGenerated.length,
+                      components: componentCount
+                    };
+
+                    const sseData = `data: ${JSON.stringify(frontendMsg)}\n\n`;
+                    controller.enqueue(encoder.encode(sseData));
+                  }
+                } catch (parseError) {
+                  console.error('[generate-ai-code-stream] Failed to parse remaining buffer:', parseError);
+                }
+              }
+
+            } catch (error) {
+              console.error('[generate-ai-code-stream] Stream error:', error);
+              controller.error(error);
+            } finally {
+              controller.close();
+              reader.releaseLock();
+            }
+          }
+        });
+
+        return new Response(stream, {
+          headers: {
+            'Content-Type': 'text/event-stream',
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+            'Transfer-Encoding': 'chunked',
+            'Content-Encoding': 'none',
+            'X-Accel-Buffering': 'no',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        });
+      } catch (pythonError) {
+        console.error('[generate-ai-code-stream] Python API error:', pythonError);
+        return NextResponse.json({
+          success: false,
+          error: `Failed to connect to Claude Code CLI service: ${(pythonError as Error).message}`,
+        }, { status: 500 });
+      }
+    }
     
     // Initialize conversation state if not exists
     if (!global.conversationState) {

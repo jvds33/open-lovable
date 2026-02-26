@@ -5,7 +5,7 @@ export const appConfig = {
   // Vercel Sandbox Configuration
   vercelSandbox: {
     // Sandbox timeout in minutes
-    timeoutMinutes: 15,
+    timeoutMinutes: 30,
 
     // Convert to milliseconds for Vercel Sandbox API
     get timeoutMs() {
@@ -50,23 +50,27 @@ export const appConfig = {
   
   // AI Model Configuration
   ai: {
-    // Default AI model
-    defaultModel: 'google/gemini-3-pro-preview',
-    
+    // Default AI model (Claude Code CLI subscription mode)
+    defaultModel: 'anthropic/claude-sonnet-4-5-20250929',
+
     // Available models
     availableModels: [
       'openai/gpt-5',
       'moonshotai/kimi-k2-instruct-0905',
+      'anthropic/claude-sonnet-4-5-20250929',
       'anthropic/claude-sonnet-4-20250514',
-      'google/gemini-3-pro-preview'
+      'google/gemini-2.0-flash-exp',
+      'google/gemini-3-pro-preview',
     ],
-    
+
     // Model display names
     modelDisplayNames: {
       'openai/gpt-5': 'GPT-5',
       'moonshotai/kimi-k2-instruct-0905': 'Kimi K2 (Groq)',
+      'anthropic/claude-sonnet-4-5-20250929': 'Sonnet 4.5 (Claude Code CLI)',
       'anthropic/claude-sonnet-4-20250514': 'Sonnet 4',
-      'google/gemini-3-pro-preview': 'Gemini 3 Pro (Preview)'
+      'google/gemini-2.0-flash-exp': 'Gemini 2.0 Flash (Experimental)',
+      'google/gemini-3-pro-preview': 'Gemini 3 Pro (Preview)',
     } as Record<string, string>,
     
     // Model API configuration

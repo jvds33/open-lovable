@@ -981,6 +981,14 @@ Tip: I automatically detect and install npm packages from your code imports (lik
             console.log(`[applyGeneratedCode] Packages installed: ${packagesInstalled}, refresh delay: ${refreshDelay}ms`);
             
             setTimeout(async () => {
+            // Add detailed debugging
+            console.log('[applyGeneratedCode] Checking refresh conditions...');
+            console.log('[applyGeneratedCode] iframeRef.current:', !!iframeRef.current);
+            console.log('[applyGeneratedCode] currentSandboxData:', currentSandboxData);
+            console.log('[applyGeneratedCode] currentSandboxData?.url:', currentSandboxData?.url);
+            console.log('[applyGeneratedCode] effectiveSandboxData:', effectiveSandboxData);
+            console.log('[applyGeneratedCode] global sandboxData:', sandboxData);
+
             if (iframeRef.current && currentSandboxData?.url) {
               console.log('[applyGeneratedCode] Starting iframe refresh sequence...');
               console.log('[applyGeneratedCode] Current iframe src:', iframeRef.current.src);
@@ -1042,7 +1050,30 @@ Tip: I automatically detect and install npm packages from your code imports (lik
               
               console.log('[applyGeneratedCode] Iframe recreated with new content');
             } else {
-              console.error('[applyGeneratedCode] No iframe or sandbox URL available for refresh');
+              // Improved error handling
+              if (!iframeRef.current) {
+                console.warn('[applyGeneratedCode] No iframe ref available for refresh. Iframe may not be mounted yet.');
+                addChatMessage('⚠️ Preview iframe is not available. The code has been applied but preview may need manual refresh.', 'system');
+              } else if (!currentSandboxData?.url) {
+                console.warn('[applyGeneratedCode] No sandbox URL available for refresh.');
+                console.log('[applyGeneratedCode] Current sandboxData state:', sandboxData);
+                console.log('[applyGeneratedCode] effectiveSandboxData:', effectiveSandboxData);
+
+                // Try to use global sandboxData as fallback
+                if (sandboxData?.url) {
+                  console.log('[applyGeneratedCode] Attempting fallback refresh with global sandboxData.url:', sandboxData.url);
+                  try {
+                    const urlWithTimestamp = `${sandboxData.url}?t=${Date.now()}&fallback=true`;
+                    iframeRef.current.src = urlWithTimestamp;
+                    console.log('[applyGeneratedCode] Fallback refresh successful');
+                  } catch (e) {
+                    console.error('[applyGeneratedCode] Fallback refresh failed:', e);
+                    addChatMessage('⚠️ Code applied successfully, but automatic preview refresh failed. Please refresh the page to see changes.', 'system');
+                  }
+                } else {
+                  addChatMessage('⚠️ Code applied successfully, but sandbox URL is not available. Please create a sandbox first or refresh the page.', 'system');
+                }
+              }
             }
           }, refreshDelay); // Dynamic delay based on whether packages were installed
         }
@@ -3348,7 +3379,10 @@ Focus on the key sections and content, making it clean and modern.`;
                 onSubmit={(url, style, model, instructions) => {
                   // Mark that we've had an initial submission
                   setHasInitialSubmission(true);
-                  
+
+                  // Update AI model state immediately
+                  setAiModel(model);
+
                   // Store the configuration in sessionStorage (same as home page)
                   sessionStorage.setItem('targetUrl', url);
                   sessionStorage.setItem('selectedStyle', style);
@@ -3357,7 +3391,7 @@ Focus on the key sections and content, making it clean and modern.`;
                     sessionStorage.setItem('additionalInstructions', instructions);
                   }
                   sessionStorage.setItem('autoStart', 'true');
-                  
+
                   // Start generation using the existing logic
                   setHomeUrlInput(url);
                   setHomeContextInput(instructions || '');
