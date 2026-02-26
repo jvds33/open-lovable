@@ -29,7 +29,7 @@ MAX_CONCURRENT = 1
 semaphore = asyncio.Semaphore(MAX_CONCURRENT)
 
 WINDOW_SECONDS = 60
-MAX_REQ_PER_WINDOW = 3
+MAX_REQ_PER_WINDOW = 10
 ip_hits: defaultdict[str, deque] = defaultdict(deque)
 
 

@@ -72,6 +72,12 @@ export const appConfig = {
     defaultMemory: 1,
   },
   
+  // ComputeSDK base provider config (used by compute-provider.ts)
+  baseProviderConfig: {
+    vitePort: 5173,
+    viteStartupDelay: 10000,
+  },
+
   // AI Model Configuration
   ai: {
     // Default AI model (Claude Code CLI subscription mode)
