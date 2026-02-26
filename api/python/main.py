@@ -3,11 +3,14 @@ Python FastAPI Service - Claude Code SDK Bridge Layer
 Provides Claude Code CLI subscription support for Next.js frontend
 """
 import os
+import time
+import asyncio
 import logging
+from collections import deque, defaultdict
 from contextlib import asynccontextmanager
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
@@ -20,6 +23,24 @@ load_dotenv()
 
 # Configure logger
 logger = logging.getLogger(__name__)
+
+# Rate limiting / concurrency globals
+MAX_CONCURRENT = 1
+semaphore = asyncio.Semaphore(MAX_CONCURRENT)
+
+WINDOW_SECONDS = 60
+MAX_REQ_PER_WINDOW = 3
+ip_hits: defaultdict[str, deque] = defaultdict(deque)
+
+
+def rate_limit_ip(ip: str):
+    now = time.time()
+    q = ip_hits[ip]
+    while q and now - q[0] > WINDOW_SECONDS:
+        q.popleft()
+    if len(q) >= MAX_REQ_PER_WINDOW:
+        raise HTTPException(status_code=429, detail="Rate limit exceeded. Try again in a bit.")
+    q.append(now)
 
 
 # Define request models
@@ -84,6 +105,11 @@ async def root():
     }
 
 
+@app.get("/health")
+def health():
+    return {"ok": True}
+
+
 @app.get("/api/claude-code/status", response_model=StatusResponse)
 async def check_status():
     """
@@ -97,16 +123,21 @@ async def check_status():
 
 
 @app.post("/api/claude-code/generate")
-async def generate_code_stream(request: GenerateRequest):
+async def generate_code_stream(http_request: Request, request: GenerateRequest):
     """
     Generate code using Claude Code CLI (streaming mode)
 
     Args:
+        http_request: The incoming HTTP request (used for rate limiting)
         request: Generation request containing prompt, model, and other parameters
 
     Returns:
         StreamingResponse: Server-Sent Events (SSE) format streaming response
     """
+    # Rate limiting
+    ip = http_request.client.host if http_request.client else "unknown"
+    rate_limit_ip(ip)
+
     logger.info(f"Received generation request:")
     logger.info(f"  - prompt: {request.prompt[:50]}...")
     logger.info(f"  - model: {request.model}")
@@ -126,27 +157,28 @@ async def generate_code_stream(request: GenerateRequest):
     async def event_stream():
         """Generate SSE event stream"""
         try:
-            logger.info("Starting streaming generation...")
+            async with semaphore:
+                logger.info("Starting streaming generation...")
 
-            # Calculate project root directory (two levels up from api/python)
-            project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-            logger.info(f"Project path: {project_path}")
+                # Calculate project root directory (two levels up from api/python)
+                project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+                logger.info(f"Project path: {project_path}")
 
-            message_count = 0
-            async for message in adapter.execute_streaming(
-                prompt=request.prompt,
-                model=request.model,
-                session_id=request.session_id,
-                system_prompt=request.system_prompt,
-                project_path=project_path,
-            ):
-                message_count += 1
-                logger.info(f"Received message #{message_count}: {message.get('type', 'unknown')}")
-                # Convert message to SSE format
-                import json
-                yield f"data: {json.dumps(message, ensure_ascii=False)}\n\n"
+                message_count = 0
+                async for message in adapter.execute_streaming(
+                    prompt=request.prompt,
+                    model=request.model,
+                    session_id=request.session_id,
+                    system_prompt=request.system_prompt,
+                    project_path=project_path,
+                ):
+                    message_count += 1
+                    logger.info(f"Received message #{message_count}: {message.get('type', 'unknown')}")
+                    # Convert message to SSE format
+                    import json
+                    yield f"data: {json.dumps(message, ensure_ascii=False)}\n\n"
 
-            logger.info(f"Streaming completed, total {message_count} messages")
+                logger.info(f"Streaming completed, total {message_count} messages")
         except Exception as e:
             # Error handling
             import json
