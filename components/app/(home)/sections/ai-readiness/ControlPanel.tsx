@@ -330,13 +330,13 @@ export default function ControlPanel({
   const getStatusIcon = (status: CheckItem['status']) => {
     switch (status) {
       case 'checking':
-        return <Loader2 className="w-16 h-16 text-heat-100 animate-spin" />;
+        return <Loader2 className="w-16 h-16 text-#000000 animate-spin" />;
       case 'pass':
         return <CheckCircle2 className="w-16 h-16 text-accent-black" />;
       case 'fail':
-        return <XCircle className="w-16 h-16 text-heat-200" />;
+        return <XCircle className="w-16 h-16 text-#171717" />;
       case 'warning':
-        return <AlertCircle className="w-16 h-16 text-heat-100" />;
+        return <AlertCircle className="w-16 h-16 text-#000000" />;
       default:
         return <div className="w-16 h-16 rounded-full border border-black-alpha-8" />;
     }
@@ -445,8 +445,8 @@ export default function ControlPanel({
                 }}
                 className={`
                   relative p-16 rounded-8 transition-all bg-accent-white border
-                  ${(check as any).isAI ? 'border-heat-100 border-opacity-40 bg-gradient-to-br from-accent-white to-heat-4' : 'border-black-alpha-8'}
-                  ${isActive ? 'border-heat-100 shadow-lg' : ''}
+                  ${(check as any).isAI ? 'border-#000000 border-opacity-40 bg-gradient-to-br from-accent-white to-heat-4' : 'border-black-alpha-8'}
+                  ${isActive ? 'border-#000000 shadow-lg' : ''}
                   ${check.status !== 'pending' && check.status !== 'checking' ? 'cursor-pointer hover:shadow-md' : ''}
                   ${(check as any).isLoading ? 'animate-pulse' : ''}
                 `}
@@ -501,8 +501,8 @@ export default function ControlPanel({
                             className={`
                               h-full rounded-full
                               ${check.status === 'pass' ? 'bg-accent-black' : ''}
-                              ${check.status === 'warning' ? 'bg-heat-100' : ''}
-                              ${check.status === 'fail' ? 'bg-heat-200' : ''}
+                              ${check.status === 'warning' ? 'bg-#000000' : ''}
+                              ${check.status === 'fail' ? 'bg-#171717' : ''}
                             `}
                             initial={{ width: 0 }}
                             animate={{ width: `${check.score}%` }}
@@ -544,7 +544,7 @@ export default function ControlPanel({
                             <ul className="mt-4 space-y-2">
                               {check.actionItems.map((item: string, i: number) => (
                                 <li key={i} className="flex items-start gap-6 text-body-small text-black-alpha-64">
-                                  <span className="text-heat-100 mt-1">•</span>
+                                  <span className="text-#000000 mt-1">•</span>
                                   <span>{item}</span>
                                 </li>
                               ))}
@@ -609,7 +609,7 @@ export default function ControlPanel({
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                <h3 className="text-label-large text-heat-100 mb-16 font-medium">AI Enhanced Analysis</h3>
+                <h3 className="text-label-large text-#000000 mb-16 font-medium">AI Enhanced Analysis</h3>
                 <RadarChart 
                   data={aiInsights
                     .filter(check => check.status !== 'pending' && check.status !== 'checking')
@@ -621,10 +621,10 @@ export default function ControlPanel({
                   size={350}
                 />
                 <div className="mt-16 text-center">
-                  <div className="text-title-h3 text-heat-100">
+                  <div className="text-title-h3 text-#000000">
                     {Math.round(aiInsights.reduce((sum, check) => sum + (check.score || 0), 0) / aiInsights.length)}%
                   </div>
-                  <div className="text-label-small text-heat-100 opacity-60">AI Score</div>
+                  <div className="text-label-small text-#000000 opacity-60">AI Score</div>
                 </div>
               </motion.div>
             )}

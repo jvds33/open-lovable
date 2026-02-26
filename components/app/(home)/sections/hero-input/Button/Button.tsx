@@ -15,7 +15,7 @@ export default function HeroInputSubmitButton({
 }) {
   return (
     <Button 
-      className={`hero-input-button !p-0 ${disabled ? 'bg-gray-400 hover:bg-gray-400 cursor-wait' : 'bg-heat-100 hover:bg-heat-200'}`} 
+      className={`hero-input-button !p-0 ${disabled ? 'bg-gray-400 hover:bg-gray-400 cursor-wait' : 'bg-#000000 hover:bg-#171717'}`} 
       size="large" 
       variant="primary"
       disabled={disabled}

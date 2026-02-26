@@ -1275,7 +1275,7 @@ Tip: I automatically detect and install npm packages from your code imports (lik
                                       {fileInfo.name}
                                       {fileInfo.edited && (
                                         <span className={`text-[10px] px-1 rounded ${
-                                          isSelected ? 'bg-blue-400' : 'bg-orange-500 text-white'
+                                          isSelected ? 'bg-blue-400' : 'bg-black text-white'
                                         }`}>✓</span>
                                       )}
                                     </span>
@@ -1392,7 +1392,7 @@ Tip: I automatically detect and install npm packages from your code imports (lik
                     <div className="bg-black border border-gray-200 rounded-lg overflow-hidden">
                       <div className="px-4 py-2 bg-gray-100 text-gray-900 flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <div className="w-16 h-16 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+                          <div className="w-16 h-16 border-2 border-black border-t-transparent rounded-full animate-spin" />
                           <span className="font-mono text-sm">Streaming code...</span>
                         </div>
                       </div>
@@ -1410,7 +1410,7 @@ Tip: I automatically detect and install npm packages from your code imports (lik
                         >
                           {generationProgress.streamedCode || 'Starting code generation...'}
                         </SyntaxHighlighter>
-                        <span className="inline-block w-3 h-5 bg-orange-400 ml-1 animate-pulse" />
+                        <span className="inline-block w-3 h-5 bg-gray-700 ml-1 animate-pulse" />
                       </div>
                     </div>
                   )
@@ -1452,7 +1452,7 @@ Tip: I automatically detect and install npm packages from your code imports (lik
                           >
                             {generationProgress.currentFile.content}
                           </SyntaxHighlighter>
-                          <span className="inline-block w-3 h-4 bg-orange-400 ml-4 mb-4 animate-pulse" />
+                          <span className="inline-block w-3 h-4 bg-gray-700 ml-4 mb-4 animate-pulse" />
                         </div>
                       </div>
                     )}
@@ -1547,7 +1547,7 @@ Tip: I automatically detect and install npm packages from your code imports (lik
               <div className="mx-6 mb-6">
                 <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-to-r from-orange-500 to-orange-400 transition-all duration-300"
+                    className="h-full bg-gradient-to-r from-black to-gray-700 transition-all duration-300"
                     style={{
                       width: `${(generationProgress.currentComponent / Math.max(generationProgress.components.length, 1)) * 100}%`
                     }}
@@ -3871,7 +3871,7 @@ Focus on the key sections and content, making it clean and modern.`;
                           return startIndex !== -1 ? lastContent.slice(startIndex) : lastContent;
                         })()}
                       </SyntaxHighlighter>
-                      <span className="inline-block w-3 h-4 bg-orange-400 ml-3 mb-3 animate-pulse" />
+                      <span className="inline-block w-3 h-4 bg-gray-700 ml-3 mb-3 animate-pulse" />
                     </div>
                   </motion.div>
                 )}

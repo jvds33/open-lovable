@@ -3,7 +3,6 @@
 import { AnimatePresence, cubicBezier, motion } from "motion/react";
 import { useEffect } from "react";
 
-import { Connector } from "@/components/shared/layout/curvy-rect";
 import { useHeaderContext } from "@/components/shared/header/HeaderContext";
 import { lockBody } from "@/components/shared/lockBody";
 import AnimatedHeight from "@/components/shared/layout/animated-height";
@@ -79,11 +78,6 @@ export default function HeaderDropdownWrapper() {
                   clearDropdown();
                 }}
               >
-                <div className="cmw-[1112px] absolute h-full pointer-events-none top-0 border-x border-border-faint">
-                  <Connector className="absolute -left-[11.5px] -top-11" />
-                  <Connector className="absolute -right-[11.5px] -top-11" />
-                </div>
-
                 <motion.div
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0, pointerEvents: "none" }}

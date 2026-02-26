@@ -53,7 +53,7 @@ export default function HeroScrapingTag({
       className={cn(
         "py-4 h-max font-mono w-max px-6 text-mono-x-small rounded-6 transition-colors",
         active
-          ? "bg-heat-12 text-heat-100"
+          ? "bg-heat-12 text-#000000"
           : "bg-black-alpha-4 text-black-alpha-56",
         attrs.className,
       )}

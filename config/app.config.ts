@@ -47,6 +47,30 @@ export const appConfig = {
     // Working directory in sandbox
     workingDirectory: '/home/user/app',
   },
+
+  // Devbox Sandbox Configuration
+  devbox: {
+    // Sandbox timeout in minutes
+    timeoutMinutes: 30,
+
+    // Convert to milliseconds for Devbox API
+    get timeoutMs() {
+      return this.timeoutMinutes * 60 * 1000;
+    },
+
+    // Development server port (Devbox uses 5173 for Vite)
+    vitePort: 5173,
+
+    // Time to wait for Vite dev server to be ready (in milliseconds)
+    viteStartupDelay: 10000,
+
+    // Working directory in sandbox
+    workingDirectory: '/workspace',
+
+    // Default CPU and memory resources
+    defaultCpu: 1,
+    defaultMemory: 1,
+  },
   
   // AI Model Configuration
   ai: {
@@ -60,6 +84,7 @@ export const appConfig = {
       'anthropic/claude-sonnet-4-5-20250929',
       'anthropic/claude-sonnet-4-20250514',
       'google/gemini-2.0-flash-exp',
+      'google/gemini-3-flash',
       'google/gemini-3-pro-preview',
       'openrouter/minimax/minimax-m2.1',
       'openrouter/anthropic/claude-3.5-sonnet',
@@ -73,6 +98,7 @@ export const appConfig = {
       'anthropic/claude-sonnet-4-5-20250929': 'Sonnet 4.5 (Claude Code CLI)',
       'anthropic/claude-sonnet-4-20250514': 'Sonnet 4',
       'google/gemini-2.0-flash-exp': 'Gemini 2.0 Flash (Experimental)',
+      'google/gemini-3-flash': 'Gemini 3 Flash',
       'google/gemini-3-pro-preview': 'Gemini 3 Pro (Preview)',
       'openrouter/minimax/minimax-m2.1': 'MiniMax M2.1 (OpenRouter)',
       'openrouter/anthropic/claude-3.5-sonnet': 'Claude 3.5 Sonnet (OpenRouter)',

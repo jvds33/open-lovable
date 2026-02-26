@@ -1,7 +1,7 @@
 import { HTMLAttributes } from "react";
 
 export default function FirecrawlIcon({
-  fill = "var(--heat-100)",
+  fill = "var(--#000000)",
   innerFillColor = "var(--background-base)",
   ...attrs
 }: HTMLAttributes<HTMLOrSVGElement> & {

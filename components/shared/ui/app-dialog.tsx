@@ -2,7 +2,6 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import CurvyRect from "@/components/shared/layout/curvy-rect";
 import { cn } from "@/utils/cn";
 import {
   Dialog,
@@ -20,14 +19,12 @@ import {
 type AppDialogContentProps = React.ComponentPropsWithoutRef<
   typeof ShadDialogContent
 > & {
-  withCurvyRect?: boolean;
   bodyClassName?: string;
 };
 
 export function AppDialogContent({
   className,
   children,
-  withCurvyRect = true,
   bodyClassName,
   ...props
 }: AppDialogContentProps) {
@@ -39,9 +36,6 @@ export function AppDialogContent({
       )}
       {...props}
     >
-      {withCurvyRect && (
-        <CurvyRect className="absolute inset-0 pointer-events-none" allSides />
-      )}
       <motion.div
         initial={{ opacity: 0, scale: 0.985, y: 24 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}

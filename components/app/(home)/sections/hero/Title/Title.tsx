@@ -85,7 +85,7 @@ export const encryptText = (
 //   React.HTMLAttributes<HTMLDivElement>
 // >((props, ref) => {
 //   return (
-//     <div className="text-title-h1 mx-auto text-center [&_span]:text-heat-100 mb-12 lg:mb-16">
+//     <div className="text-title-h1 mx-auto text-center [&_span]:text-#000000 mb-12 lg:mb-16">
 //       <div {...props} className="hidden lg:contents" ref={ref} />
 //       <div
 //         className="lg:hidden contents"
@@ -233,7 +233,7 @@ export const encryptText = (
 //   React.HTMLAttributes<HTMLDivElement>
 // >((props, ref) => {
 //   return (
-//     <div className="text-title-h1 mx-auto text-center [&_span]:text-heat-100 mb-12 lg:mb-16">
+//     <div className="text-title-h1 mx-auto text-center [&_span]:text-#000000 mb-12 lg:mb-16">
 //       <div {...props} className="hidden lg:contents" ref={ref} />
 //       <div
 //         className="lg:hidden contents"
@@ -256,7 +256,7 @@ export const encryptText = (
 
 export default function HomeHeroTitle() {
   return (
-    <h1 className="text-title-h1 mx-auto text-center [&_span]:text-heat-100 mb-12 lg:mb-16">
+    <h1 className="text-title-h1 mx-auto text-center [&_span]:text-#000000 mb-12 lg:mb-16">
      Open Lovable <span>v3</span>
     </h1>
   );

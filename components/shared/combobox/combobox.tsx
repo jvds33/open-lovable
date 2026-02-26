@@ -47,7 +47,7 @@ export default function Combobox({
           "inside-border before:border-black-alpha-8 hover:before:border-black-alpha-12 hover:bg-black-alpha-2",
           "text-body-medium",
           isOpen &&
-            "!bg-accent-white before:!border-heat-100 before:!border-[1.25px]",
+            "!bg-accent-white before:!border-#000000 before:!border-[1.25px]",
         )}
         type="button"
         onClick={(e) => {

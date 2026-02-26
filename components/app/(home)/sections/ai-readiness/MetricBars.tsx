@@ -21,15 +21,15 @@ export default function MetricBars({ metrics }: MetricBarsProps) {
   
   const getBarColor = (score: number) => {
     // Use brand orange colors with opacity for gradient effect
-    if (score >= 80) return 'bg-heat-100';
-    if (score >= 60) return 'bg-heat-90';
+    if (score >= 80) return 'bg-#000000';
+    if (score >= 60) return 'bg-#171717';
     if (score >= 40) return 'bg-heat-40 opacity-80';
     return 'bg-heat-20';
   };
   
   const getBulletColor = (_score: number) => {
-    // Always use heat-100 for all bullets for consistency
-    return 'bg-heat-100';
+    // Always use #000000 for all bullets for consistency
+    return 'bg-#000000';
   };
   
   const toggleExpanded = (label: string) => {
@@ -108,7 +108,7 @@ export default function MetricBars({ metrics }: MetricBarsProps) {
               
               {/* Score value - fixed width */}
               <div className="col-span-1 text-right">
-                <span className="text-label-medium font-medium text-heat-100">
+                <span className="text-label-medium font-medium text-#000000">
                   {metric.score}%
                 </span>
               </div>
@@ -141,7 +141,7 @@ export default function MetricBars({ metrics }: MetricBarsProps) {
                         <ul className="space-y-4">
                           {metric.actionItems.map((item: string, i: number) => (
                             <li key={i} className="flex items-start gap-6 text-body-small text-black-alpha-64">
-                              <span className="text-heat-100 mt-1">•</span>
+                              <span className="text-#000000 mt-1">•</span>
                               <span>{item}</span>
                             </li>
                           ))}
@@ -171,7 +171,7 @@ export default function MetricBars({ metrics }: MetricBarsProps) {
             <div className="text-label-small text-black-alpha-48">Passing</div>
           </div>
           <div>
-            <div className="text-title-h3 text-heat-100">
+            <div className="text-title-h3 text-#000000">
               {metrics.filter(m => m.status === 'warning').length}
             </div>
             <div className="text-label-small text-black-alpha-48">Warning</div>

@@ -1,4 +1,3 @@
-import CurvyRect from "@/components/shared/layout/curvy-rect";
 import { cn } from "@/utils/cn";
 import { ArrowUpRight } from "lucide-react";
 
@@ -90,14 +89,6 @@ export default function HeaderDropdownContent({
           ))}
 
           <div className="h-42 border-t border-border-faint border-x -mt-1 relative lg-max:hidden">
-            <CurvyRect
-              className="-top-1 absolute -left-1 w-[calc(100%+2px)]"
-              top
-            />
-            <CurvyRect
-              className="bottom-full absolute -left-1 w-[calc(100%+2px)]"
-              bottom
-            />
           </div>
         </div>
       ))}
@@ -111,14 +102,6 @@ export default function HeaderDropdownContent({
         <Item item={sideItem} />
 
         <div className="h-42 border-t border-border-faint border-r -mt-1 relative lg-max:hidden">
-          <CurvyRect
-            className="-top-1 absolute left-0 w-[calc(100%+1px)]"
-            top
-          />
-          <CurvyRect
-            className="bottom-full absolute left-0 w-[calc(100%+1px)]"
-            bottom
-          />
         </div>
       </div>
     </div>
@@ -147,7 +130,7 @@ const Item = ({
 }) => {
   return (
     <a
-      className="flex items-start gap-16 py-16 pl-24 lg-max:[&_svg]:size-24 lg:pl-44 group border-x hover:bg-black-alpha-2 border-b border-border-faint transition-all hover:text-heat-100"
+      className="flex items-start gap-16 py-16 pl-24 lg-max:[&_svg]:size-24 lg:pl-44 group border-x hover:bg-black-alpha-2 border-b border-border-faint transition-all hover:text-#000000"
       href={item.href}
       key={item.label}
       target={item.target}
@@ -189,7 +172,7 @@ const ItemBig = ({
         <a
           href={item.href}
           target={item.target}
-          className="text-label-medium inline-block hover:text-heat-100 transition-colors"
+          className="text-label-medium inline-block hover:text-#000000 transition-colors"
         >
           {item.label}
         </a>
@@ -205,7 +188,7 @@ const ItemBig = ({
                 key={cta.label}
                 href={cta.href}
                 target={cta.target}
-                className="inline-flex items-center gap-6 px-12 py-6 rounded-6 text-label-small text-heat-100 bg-heat-4 hover:bg-heat-8 transition-colors whitespace-nowrap shrink-0"
+                className="inline-flex items-center gap-6 px-12 py-6 rounded-6 text-label-small text-#000000 bg-heat-4 hover:bg-heat-8 transition-colors whitespace-nowrap shrink-0"
               >
                 <span>{cta.label}</span>
                 <ArrowUpRight className="size-14" aria-hidden="true" />

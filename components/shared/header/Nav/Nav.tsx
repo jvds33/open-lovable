@@ -219,7 +219,7 @@ export const NAV_ITEMS = [
               },
               {
                 icon: (
-                  <div className="text-heat-100">
+                  <div className="text-#000000">
                     <Platforms />
                   </div>
                 ),

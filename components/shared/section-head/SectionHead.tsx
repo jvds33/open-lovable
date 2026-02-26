@@ -1,7 +1,6 @@
 import { HTMLAttributes } from "react";
 
 import Badge from "@/components/ui/shadcn/badge";
-import CurvyRect from "@/components/shared/layout/curvy-rect";
 import { cn } from "@/utils/cn";
 
 type SectionHeadProps = {
@@ -43,7 +42,6 @@ export default function SectionHead({
         attrs.className,
       )}
     >
-      <CurvyRect allSides />
       <div className="h-1 bg-border-faint bottom-0 left-0 w-full absolute" />
 
       <div className={cn("relative", containerClassName)}>

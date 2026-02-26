@@ -18,9 +18,11 @@ export interface ProviderResolution {
   actualModel: string;
 }
 
-const aiGatewayApiKey = process.env.AI_GATEWAY_API_KEY;
-const aiGatewayBaseURL = 'https://ai-gateway.vercel.sh/v1';
-const isUsingAIGateway = !!aiGatewayApiKey;
+// Custom AI Gateway configuration
+// Use custom gateway if API key and base URL are set via environment variables
+const aiGatewayApiKey = process.env.AI_GATEWAY_API_KEY || '';
+const aiGatewayBaseURL = process.env.AI_GATEWAY_BASE_URL || '';
+const isUsingAIGateway = !!aiGatewayApiKey && !!aiGatewayBaseURL;
 
 // Cache provider clients by a stable key to avoid recreating
 const clientCache = new Map<string, ProviderClient>();

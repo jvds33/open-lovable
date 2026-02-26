@@ -166,7 +166,7 @@ export default function HeroInputTabs(props: {
                 className={cn(
                   "py-2 px-6 rounded-4 text-[12px]/[16px] font-[450] transition-all",
                   tab.value === props.tab
-                    ? "bg-heat-12 text-heat-100"
+                    ? "bg-heat-12 text-#000000"
                     : "bg-black-alpha-4 text-black-alpha-56",
                 )}
               >

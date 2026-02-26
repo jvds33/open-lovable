@@ -52,7 +52,7 @@ export function AsciiBackground({
         className,
       )}
     >
-      <pre className="text-heat-100/3 font-mono text-[10px] leading-tight whitespace-pre absolute top-0 left-0 w-full h-full flex items-center justify-center">
+      <pre className="text-#000000/3 font-mono text-[10px] leading-tight whitespace-pre absolute top-0 left-0 w-full h-full flex items-center justify-center">
         {asciiPatterns[frameIndex]}
       </pre>
     </div>

@@ -87,7 +87,7 @@ export default function Tooltip({
                   },
                 }}
                 className={cn(
-                  "py-10 px-16 rounded-12 max-w-248 absolute w-max text-body-medium text-accent-white bg-black-alpha-64 backdrop-blur-[6px] z-[121]",
+                  "py-10 px-16 rounded-12 max-w-248 absolute w-max text-body-medium text-white bg-gray-600 backdrop-blur-[6px] z-[121]",
                   className,
                 )}
                 dangerouslySetInnerHTML={{ __html: props.description }}

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 
-import CurvyRect, { Connector } from "@/components/shared/layout/curvy-rect";
 import { encryptText } from "@/components/app/(home)/sections/hero/Title/Title";
 
 import HeroScrapingCodeLoading from "./Loading/Loading";
@@ -97,38 +96,24 @@ export default function HeroScrapingCode({ step }: { step: number }) {
   }, [step, reveal]);
 
   return (
-    <div className="h-280 lg:h-310 flex z-[1] w-full relative -top-1 bg-background-base">
-      <Connector className="lg:hidden absolute -top-10 -left-[10.5px]" />
-      <Connector className="lg:hidden absolute -top-10 -right-[10.5px]" />
-      <div className="lg:hidden absolute top-0 left-[calc(50%-50vw)] w-screen h-1 bg-border-faint" />
-
-      <Connector className="lg:hidden absolute -bottom-10 -left-[10.5px]" />
-      <Connector className="lg:hidden absolute -bottom-10 -right-[10.5px]" />
-      <div className="lg:hidden absolute bottom-0 left-[calc(50%-50vw)] w-screen h-1 bg-border-faint" />
-
-      <div className="flex-1 lg-max:min-w-0 h-full relative lg:inside-border before:border-border-faint">
-        <CurvyRect className="overlay" allSides />
-        <CurvyRect
-          className="size-32 absolute bottom-0 -left-31 lg-max:hidden"
-          bottomRight
-        />
-
-        <div className="pl-15 border-b border-border-faint p-13 flex justify-between items-center">
+    <div className="h-280 lg:h-310 flex z-[1] w-full relative bg-background-base border border-gray-200 rounded-8 overflow-hidden">
+      <div className="flex-1 h-full relative">
+        <div className="pl-15 border-b border-gray-200 p-13 flex justify-between items-center bg-gray-50">
           <div className="flex gap-10 items-center">
             {Array.from({ length: 3 }).map((_, index) => (
               <div
-                className="w-12 h-12 rounded-full relative inside-border before:border-border-muted"
+                className="w-12 h-12 rounded-full bg-gray-300"
                 key={index}
               />
             ))}
           </div>
 
-          <div className="text-mono-x-small font-mono text-black-alpha-20">
+          <div className="text-mono-x-small font-mono text-gray-400">
             [ .JSON ]
           </div>
         </div>
 
-        <div className="overflow-x-scroll hide-scrollbar lg:contents relative">
+        <div className="overflow-x-scroll hide-scrollbar relative">
           <Code
             code={`[
   {
@@ -143,16 +128,6 @@ export default function HeroScrapingCode({ step }: { step: number }) {
         </div>
 
         <HeroScrapingCodeLoading finished={step >= 6} />
-      </div>
-
-      <div className="w-28 lg-max:hidden -ml-1 relative">
-        <div className="h-1 w-[calc(100%-1px)] top-0 left-0 absolute bg-border-faint" />
-        <CurvyRect className="overlay" topLeft />
-      </div>
-
-      <div className="h-53 lg-max:hidden -right-37 bottom-0 absolute w-65">
-        <CurvyRect className="overlay" bottom topRight />
-        <div className="overlay border-y border-border-faint" />
       </div>
     </div>
   );

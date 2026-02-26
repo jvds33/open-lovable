@@ -17,16 +17,11 @@ export default function Checkbox({
     >
       <div
         className={cn(
-          "w-full h-full rounded-3 group inside-border relative transition-all",
+          "w-full h-full rounded-3 relative transition-all border",
           checked
-            ? "bg-heat-100 group-hover:bg-[#FA4500] before:border-transparent"
-            : "bg-black-alpha-3 group-hover:bg-black-alpha-6 before:border-black-alpha-10 group-hover:before:border-black-alpha-40",
+            ? "bg-black border-black hover:bg-gray-900"
+            : "bg-gray-100 border-gray-300 hover:bg-gray-200 hover:border-gray-400",
         )}
-        style={{
-          boxShadow: checked
-            ? "0px 2px 4px 0px rgba(255, 77, 0, 0.12), 0px 1px 1px 0px rgba(255, 77, 0, 0.12), 0px 0.5px 0.5px 0px rgba(255, 77, 0, 0.16), 0px 0.25px 0.25px 0px rgba(255, 77, 0, 0.20)"
-            : "",
-        }}
       >
         <AnimatePresence>
           {checked && (

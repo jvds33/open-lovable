@@ -7,7 +7,6 @@ import Globe from "./_svg/Globe";
 import HeroInputSubmitButton from "./Button/Button";
 import HeroInputTabsMobile from "./Tabs/Mobile/Mobile";
 import HeroInputTabs from "./Tabs/Tabs";
-import AsciiExplosion from "@/components/shared/effects/flame/ascii-explosion";
 import { Endpoint } from "@/components/shared/Playground/Context/types";
 
 export default function HeroInput() {
@@ -74,10 +73,6 @@ export default function HeroInput() {
         >
           <HeroInputSubmitButton dirty={url.length > 0} />
         </Link>
-      </div>
-
-      <div className="h-248 top-84 cw-768 pointer-events-none absolute overflow-clip -z-10">
-        <AsciiExplosion className="-top-200" />
       </div>
     </div>
   );

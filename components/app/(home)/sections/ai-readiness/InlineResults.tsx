@@ -85,7 +85,7 @@ export default function InlineResults({
           <div className="relative">
             <div className="h-2 bg-black-alpha-4 rounded-full overflow-hidden">
               <motion.div
-                className="h-full bg-gradient-to-r from-heat-100 to-heat-200"
+                className="h-full bg-gradient-to-r from-#000000 to-#171717"
                 initial={{ width: "0%" }}
                 animate={{ width: `${((analysisStep + 1) / 4) * 100}%` }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
@@ -94,7 +94,7 @@ export default function InlineResults({
             
             {/* Glowing dot at the end of progress */}
             <motion.div
-              className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-heat-100 rounded-full"
+              className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-#000000 rounded-full"
               style={{ 
                 left: `${((analysisStep + 1) / 4) * 100}%`,
                 boxShadow: "0 0 20px rgba(255, 77, 0, 0.8)",
@@ -121,7 +121,7 @@ export default function InlineResults({
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
             >
-              <Sparkles className="w-16 h-16 text-heat-100" />
+              <Sparkles className="w-16 h-16 text-#000000" />
             </motion.div>
             {analysisSteps[analysisStep]}
           </motion.div>
@@ -305,9 +305,9 @@ export default function InlineResults({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2 }}
-            className="p-12 bg-heat-4 rounded-8 border border-heat-100 flex items-start gap-8"
+            className="p-12 bg-heat-4 rounded-8 border border-#000000 flex items-start gap-8"
           >
-            <AlertCircle className="w-16 h-16 text-heat-100 mt-2" />
+            <AlertCircle className="w-16 h-16 text-#000000 mt-2" />
             <div className="flex-1">
               <div className="text-label-medium text-accent-black mb-4">Quick Tip</div>
               <div className="text-body-small text-black-alpha-64">
@@ -331,7 +331,7 @@ export default function InlineResults({
             >
               Try Another
             </button>
-            <button className="flex-1 px-16 py-10 bg-heat-100 hover:bg-heat-200 text-white rounded-8 text-label-medium transition-all shadow-lg hover:shadow-xl">
+            <button className="flex-1 px-16 py-10 bg-#000000 hover:bg-#171717 text-white rounded-8 text-label-medium transition-all shadow-lg hover:shadow-xl">
               View Details
             </button>
           </motion.div>

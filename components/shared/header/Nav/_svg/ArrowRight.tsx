@@ -1,7 +1,7 @@
 export default function ArrowRight() {
   return (
     <svg
-      className="text-black-alpha-48 group-hover:text-heat-100 transition-all"
+      className="text-black-alpha-48 group-hover:text-#000000 transition-all"
       fill="none"
       height="20"
       viewBox="0 0 20 20"

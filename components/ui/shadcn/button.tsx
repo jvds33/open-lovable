@@ -26,11 +26,8 @@ const Button = forwardRef<HTMLButtonElement, Props>(
   ) => {
     const isNonInteractive = Boolean(disabled || isLoading);
 
-    // Focus ring adapts to light/dark variants
-    const focusRing =
-      variant === "primary" || variant === "destructive"
-        ? "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white"
-        : "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black";
+    // Focus ring - Vercel style
+    const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black";
 
     return (
       <button
@@ -58,60 +55,39 @@ const Button = forwardRef<HTMLButtonElement, Props>(
           size === "default" && "rounded-8 px-10 py-6 gap-4",
           size === "large" && "rounded-10 px-12 py-8 gap-6",
 
-          // Variant + interactive nuances
+          // Vercel-style variants
           variant === "primary" && [
-            "text-accent-white",
-            // Hover/active only when interactive
-            !isNonInteractive &&
-              "hover:bg-[color:var(--heat-90)] active:[scale:0.995]",
-            // Disabled: dim a bit, no hover, dim overlay bg layer if present
-            "disabled:opacity-80",
-            "disabled:[&_.button-background]:opacity-70",
-          ],
-
-          ["secondary", "tertiary", "playground"].includes(variant) && [
-            "text-accent-black",
-            !isNonInteractive && "active:[scale:0.99] active:bg-black-alpha-7",
+            "bg-black text-white border border-black",
+            !isNonInteractive && "hover:bg-gray-900 active:scale-[0.98]",
+            "disabled:opacity-60",
           ],
 
           variant === "secondary" && [
-            "bg-black-alpha-4",
-            !isNonInteractive && "hover:bg-black-alpha-6",
-            // Disabled: lighter fill + muted text, no hover
-            "disabled:bg-black-alpha-3",
-            "disabled:text-black-alpha-48",
-            "disabled:hover:bg-black-alpha-3",
+            "bg-white text-black border border-gray-200",
+            !isNonInteractive && "hover:bg-gray-50 hover:border-gray-300 active:scale-[0.98]",
+            "disabled:opacity-60 disabled:text-gray-400",
           ],
 
           variant === "tertiary" && [
-            !isNonInteractive && "hover:bg-black-alpha-4",
-            // Disabled: no hover background, text muted
-            "disabled:text-black-alpha-48",
-            "disabled:hover:bg-transparent",
+            "bg-transparent text-black",
+            !isNonInteractive && "hover:bg-gray-100 active:bg-gray-200",
+            "disabled:text-gray-400",
           ],
 
           variant === "destructive" && [
-            "bg-red-600 text-accent-white",
+            "bg-red-600 text-white border border-red-600",
             !isNonInteractive && "hover:bg-red-700 active:scale-[0.98]",
-            // Disabled: keep red but softer; soften text slightly
-            "disabled:bg-red-600/70",
-            "disabled:text-white-alpha-72",
-            "disabled:hover:bg-red-600/70",
+            "disabled:opacity-60",
           ],
 
           variant === "playground" && [
-            "inside-border before:border-black-alpha-4",
-            isNonInteractive
-              ? "before:opacity-0 bg-black-alpha-4 text-black-alpha-24"
-              : "hover:bg-black-alpha-4 hover:before:opacity-0 active:before:opacity-0",
+            "border border-gray-200 bg-transparent text-black",
+            !isNonInteractive && "hover:bg-gray-50",
+            "disabled:opacity-60 disabled:text-gray-400",
           ],
         )}
         disabled={isNonInteractive}
       >
-        {variant === "primary" && (
-          <div className="overlay button-background !absolute" />
-        )}
-
         {/* loading state (spinner) */}
         {isLoading && (
           <div

@@ -20,13 +20,13 @@ export function FireActionLink({
     variant === "button"
       ? cn(
           "inline-block py-4 px-8 rounded-6",
-          "text-label-small text-heat-100 bg-heat-4",
+          "text-label-small text-#000000 bg-heat-4",
           "hover:bg-heat-8 transition-all",
           "active:scale-[0.98]",
           className,
         )
       : cn(
-          "text-label-small text-secondary hover:text-heat-100 transition-all",
+          "text-label-small text-secondary hover:text-#000000 transition-all",
           "hover:underline underline-offset-4",
           "active:scale-[0.98]",
           className,

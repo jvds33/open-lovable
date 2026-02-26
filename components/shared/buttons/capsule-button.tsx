@@ -45,7 +45,7 @@ export function CapsuleButton({
 
   const variants = {
     primary: [
-      "bg-heat-100 text-white",
+      "bg-#000000 text-white",
       "hover:bg-heat-200",
       "active:scale-[0.98]",
       "shadow-[0_1px_2px_rgba(0,0,0,0.05)]",

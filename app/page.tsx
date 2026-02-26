@@ -8,26 +8,18 @@ import { appConfig } from '@/config/app.config';
 import { toast } from "sonner";
 
 // Import shared components
-import { Connector } from "@/components/shared/layout/curvy-rect";
-import HeroFlame from "@/components/shared/effects/flame/hero-flame";
-import AsciiExplosion from "@/components/shared/effects/flame/ascii-explosion";
 import { HeaderProvider } from "@/components/shared/header/HeaderContext";
 
 // Import hero section components
 import HomeHeroBackground from "@/components/app/(home)/sections/hero/Background/Background";
-import { BackgroundOuterPiece } from "@/components/app/(home)/sections/hero/Background/BackgroundOuterPiece";
 import HomeHeroBadge from "@/components/app/(home)/sections/hero/Badge/Badge";
-import HomeHeroPixi from "@/components/app/(home)/sections/hero/Pixi/Pixi";
 import HomeHeroTitle from "@/components/app/(home)/sections/hero/Title/Title";
 import HeroInputSubmitButton from "@/components/app/(home)/sections/hero-input/Button/Button";
-// import Globe from "@/components/app/(home)/sections/hero-input/_svg/Globe";
 
 // Import header components
 import HeaderBrandKit from "@/components/shared/header/BrandKit/BrandKit";
 import HeaderWrapper from "@/components/shared/header/Wrapper/Wrapper";
 import HeaderDropdownWrapper from "@/components/shared/header/Dropdown/Wrapper/Wrapper";
-import GithubIcon from "@/components/shared/header/Github/_svg/GithubIcon";
-import ButtonUI from "@/components/ui/shadcn/button"
 
 interface SearchResult {
   url: string;
@@ -225,27 +217,11 @@ export default function HomePage() {
         <div className="sticky top-0 left-0 w-full z-[101] bg-background-base header">
           <div className="absolute top-0 cmw-container border-x border-border-faint h-full pointer-events-none" />
           <div className="h-1 bg-border-faint w-full left-0 -bottom-1 absolute" />
-          <div className="cmw-container absolute h-full pointer-events-none top-0">
-            <Connector className="absolute -left-[10.5px] -bottom-11" />
-            <Connector className="absolute -right-[10.5px] -bottom-11" />
-          </div>
 
           <HeaderWrapper>
             <div className="max-w-[900px] mx-auto w-full flex justify-between items-center">
               <div className="flex gap-24 items-center">
                 <HeaderBrandKit />
-              </div>
-              <div className="flex gap-8">
-                <a
-                  className="contents"
-                  href="https://github.com/mendableai/open-lovable"
-                  target="_blank"
-                >
-                  <ButtonUI variant="tertiary">
-                    <GithubIcon />
-                    Use this Template
-                  </ButtonUI>
-                </a>
               </div>
             </div>
           </HeaderWrapper>
@@ -254,9 +230,8 @@ export default function HomePage() {
         {/* Hero Section */}
         <section className="overflow-x-clip" id="home-hero">
           <div className="pt-28 lg:pt-254 lg:-mt-100 pb-115 relative" id="hero-content">
-            <HomeHeroPixi />
-            <HeroFlame />
-            <BackgroundOuterPiece />
+            {/* Simple gradient background - Vercel style */}
+            <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-white to-gray-50 -z-10" />
             <HomeHeroBackground />
 
             <div className="relative container px-16">
@@ -266,7 +241,7 @@ export default function HomePage() {
                 Clone brand format or re-imagine any website, in seconds.
               </p>
               <Link
-                className="bg-black-alpha-4 hover:bg-black-alpha-6 rounded-6 px-8 lg:px-6 text-label-large h-30 lg:h-24 block mt-8 mx-auto w-max gap-4 transition-all"
+                className="bg-gray-100 hover:bg-gray-200 rounded-6 px-8 lg:px-6 text-label-large h-30 lg:h-24 block mt-8 mx-auto w-max gap-4 transition-all text-gray-700"
                 href="#"
                 onClick={(e) => e.preventDefault()}
               >
@@ -277,12 +252,8 @@ export default function HomePage() {
 
           {/* Mini Playground Input */}
           <div className="container lg:contents !p-16 relative -mt-90">
-            <div className="absolute top-0 left-[calc(50%-50vw)] w-screen h-1 bg-border-faint lg:hidden" />
-            <div className="absolute bottom-0 left-[calc(50%-50vw)] w-screen h-1 bg-border-faint lg:hidden" />
-            <Connector className="-top-10 -left-[10.5px] lg:hidden" />
-            <Connector className="-top-10 -right-[10.5px] lg:hidden" />
-            <Connector className="-bottom-10 -left-[10.5px] lg:hidden" />
-            <Connector className="-bottom-10 -right-[10.5px] lg:hidden" />
+            <div className="absolute top-0 left-[calc(50%-50vw)] w-screen h-1 bg-gray-200 lg:hidden" />
+            <div className="absolute bottom-0 left-[calc(50%-50vw)] w-screen h-1 bg-gray-200 lg:hidden" />
 
             {/* Hero Input Component */}
             <div className="max-w-552 mx-auto z-[11] lg:z-[2]">
@@ -437,14 +408,14 @@ export default function HomePage() {
                         <div className="py-8 grid grid-cols-2 items-center gap-12 group cursor-pointer" onClick={() => setExtendBrandStyles(!extendBrandStyles)}>
                           <div className="flex select-none">
                             <div className="flex lg-max:flex-col whitespace-nowrap flex-wrap min-w-0 gap-8 lg:justify-between flex-1">
-                              <div className="text-xs font-medium text-black-alpha-72 transition-all group-hover:text-accent-black relative">
+                              <div className="text-xs font-medium text-gray-600 transition-all group-hover:text-black relative">
                                 Extend brand styles
                               </div>
                             </div>
                           </div>
                           <div className="flex justify-end">
                             <button
-                              className="transition-all relative rounded-full group bg-black-alpha-10"
+                              className={`transition-all relative rounded-full ${extendBrandStyles ? 'bg-black' : 'bg-gray-200'}`}
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -452,20 +423,14 @@ export default function HomePage() {
                               }}
                               style={{
                                 width: '50px',
-                                height: '20px',
-                                boxShadow: 'rgba(0, 0, 0, 0.02) 0px 6px 12px 0px inset, rgba(0, 0, 0, 0.02) 0px 0.75px 0.75px 0px inset, rgba(0, 0, 0, 0.04) 0px 0.25px 0.25px 0px inset'
+                                height: '20px'
                               }}
                             >
                               <div
-                                className={`overlay transition-opacity ${extendBrandStyles ? 'opacity-100' : 'opacity-0'}`}
-                                style={{ background: 'color(display-p3 0.9059 0.3294 0.0784)', backgroundColor: '#FA4500' }}
-                              />
-                              <div
-                                className="top-[2px] left-[2px] transition-all absolute rounded-full bg-accent-white"
+                                className="top-[2px] left-[2px] transition-all absolute rounded-full bg-white shadow-sm"
                                 style={{
                                   width: '28px',
                                   height: '16px',
-                                  boxShadow: 'rgba(0, 0, 0, 0.06) 0px 6px 12px -3px, rgba(0, 0, 0, 0.06) 0px 3px 6px -1px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.08) 0px 0.5px 0.5px 0px',
                                   transform: extendBrandStyles ? 'translateX(16px)' : 'none'
                                 }}
                               />
@@ -481,7 +446,7 @@ export default function HomePage() {
                             value={additionalInstructions}
                             onChange={(e) => setAdditionalInstructions(e.target.value)}
                             placeholder="Describe the new functionality you want to build using this brand's styles..."
-                            className="w-full px-4 py-10 text-xs font-medium text-gray-700 bg-gray-50 rounded border border-gray-200 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 placeholder:text-gray-400 min-h-[80px] resize-none"
+                            className="w-full px-4 py-10 text-xs font-medium text-gray-700 bg-gray-50 rounded border border-gray-200 focus:border-black focus:outline-none focus:ring-2 focus:ring-black/10 placeholder:text-gray-400 min-h-[80px] resize-none"
                           />
                         </div>
                       )}
@@ -498,8 +463,8 @@ export default function HomePage() {
                                 onClick={() => setSelectedStyle(style.id)}
                                 className={`
                                   ${selectedStyle === style.id
-                                    ? 'bg-heat-100 hover:bg-heat-200 flex items-center justify-center button relative text-label-medium button-primary group/button rounded-10 p-8 text-accent-white active:scale-[0.995] border-0'
-                                    : 'border-gray-200 hover:border-gray-300 bg-white text-gray-700 py-3.5 px-4 rounded text-xs font-medium border text-center'
+                                    ? 'bg-black hover:bg-gray-900 text-white py-3.5 px-4 rounded-md text-xs font-medium active:scale-[0.98]'
+                                    : 'border-gray-200 hover:border-gray-300 bg-white text-gray-700 py-3.5 px-4 rounded-md text-xs font-medium border text-center'
                                   }
                                   transition-all
                                   ${isValidUrl ? 'opacity-100' : 'opacity-0'}
@@ -509,12 +474,7 @@ export default function HomePage() {
                                   transition: 'all 0.3s ease-in-out'
                                 }}
                               >
-                                {selectedStyle === style.id && (
-                                  <div className="button-background absolute inset-0 rounded-10 pointer-events-none" />
-                                )}
-                                <span className={selectedStyle === style.id ? 'relative' : ''}>
-                                  {style.name}
-                                </span>
+                                {style.name}
                               </button>
                             ))}
                           </div>
@@ -529,7 +489,7 @@ export default function HomePage() {
                         <select
                           value={selectedModel}
                           onChange={(e) => setSelectedModel(e.target.value)}
-                          className={`px-3 py-2.5 text-xs font-medium text-gray-700 bg-white rounded border border-gray-200 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 ${extendBrandStyles ? 'flex-1' : ''}`}
+                          className={`px-3 py-2.5 text-xs font-medium text-gray-700 bg-white rounded border border-gray-200 focus:border-black focus:outline-none focus:ring-2 focus:ring-black/10 ${extendBrandStyles ? 'flex-1' : ''}`}
                         >
                           {models.map((model) => (
                             <option key={model.id} value={model.id}>
@@ -542,7 +502,7 @@ export default function HomePage() {
                         {!extendBrandStyles && (
                           <input
                             type="text"
-                            className="flex-1 px-3 py-2.5 text-xs font-medium text-gray-700 bg-gray-50 rounded border border-gray-200 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 placeholder:text-gray-400"
+                            className="flex-1 px-3 py-2.5 text-xs font-medium text-gray-700 bg-gray-50 rounded border border-gray-200 focus:border-black focus:outline-none focus:ring-2 focus:ring-black/10 placeholder:text-gray-400"
                             placeholder="Additional instructions (optional)"
                             onChange={(e) => sessionStorage.setItem('additionalInstructions', e.target.value)}
                           />
@@ -554,9 +514,7 @@ export default function HomePage() {
 
                 </div>
 
-                <div className="h-248 top-84 cw-768 pointer-events-none absolute overflow-clip -z-10">
-                  <AsciiExplosion className="-top-200" />
-                </div>
+                {/* Removed AsciiExplosion - Vercel minimalist style */}
               </div>
             </div>
           </div>

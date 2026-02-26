@@ -14,34 +14,39 @@ import { appConfig } from '@/config/app.config';
 // Force dynamic route to enable streaming
 export const dynamic = 'force-dynamic';
 
-// Check if we're using Vercel AI Gateway
-const isUsingAIGateway = !!process.env.AI_GATEWAY_API_KEY;
-const aiGatewayBaseURL = 'https://ai-gateway.vercel.sh/v1';
+// Custom AI Gateway configuration
+// Use custom gateway if API key and base URL are set via environment variables
+const customGatewayKey = process.env.AI_GATEWAY_API_KEY || '';
+const customGatewayURL = process.env.AI_GATEWAY_BASE_URL || '';
+const isUsingAIGateway = !!customGatewayKey && !!customGatewayURL;
 
 console.log('[generate-ai-code-stream] AI Gateway config:', {
   isUsingAIGateway,
+  gatewayURL: customGatewayURL,
   hasGroqKey: !!process.env.GROQ_API_KEY,
-  hasAIGatewayKey: !!process.env.AI_GATEWAY_API_KEY
+  hasAIGatewayKey: !!customGatewayKey
 });
 
+// When using AI Gateway, set baseURL to AI Gateway endpoint
+// AI Gateway will route requests to the correct provider based on model name
 const groq = createGroq({
-  apiKey: process.env.AI_GATEWAY_API_KEY ?? process.env.GROQ_API_KEY,
-  baseURL: isUsingAIGateway ? aiGatewayBaseURL : undefined,
+  apiKey: isUsingAIGateway ? customGatewayKey : process.env.GROQ_API_KEY,
+  baseURL: isUsingAIGateway ? customGatewayURL : undefined,
 });
 
 const anthropic = createAnthropic({
-  apiKey: process.env.AI_GATEWAY_API_KEY ?? process.env.ANTHROPIC_API_KEY,
-  baseURL: isUsingAIGateway ? aiGatewayBaseURL : (process.env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com/v1'),
+  apiKey: isUsingAIGateway ? customGatewayKey : process.env.ANTHROPIC_API_KEY,
+  baseURL: isUsingAIGateway ? customGatewayURL : (process.env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com/v1'),
 });
 
 const googleGenerativeAI = createGoogleGenerativeAI({
-  apiKey: process.env.AI_GATEWAY_API_KEY ?? process.env.GEMINI_API_KEY,
-  baseURL: isUsingAIGateway ? aiGatewayBaseURL : undefined,
+  apiKey: isUsingAIGateway ? customGatewayKey : process.env.GEMINI_API_KEY,
+  baseURL: isUsingAIGateway ? customGatewayURL : undefined,
 });
 
 const openai = createOpenAI({
-  apiKey: process.env.AI_GATEWAY_API_KEY ?? process.env.OPENAI_API_KEY,
-  baseURL: isUsingAIGateway ? aiGatewayBaseURL : process.env.OPENAI_BASE_URL,
+  apiKey: isUsingAIGateway ? customGatewayKey : process.env.OPENAI_API_KEY,
+  baseURL: isUsingAIGateway ? customGatewayURL : process.env.OPENAI_BASE_URL,
 });
 
 const openrouter = createOpenAI({
@@ -1545,8 +1550,22 @@ MORPH FAST APPLY MODE (EDIT-ONLY):
                               (isKimiGroq ? groq : groq))));
         
         // Fix model name transformation for different providers
+        // Custom AI Gateway requires model names without prefix (e.g., 'gpt-5' instead of 'openai/gpt-5')
         let actualModel: string;
-        if (isAnthropic) {
+        if (isUsingAIGateway) {
+          // Custom Gateway requires model names without prefix
+          if (isAnthropic) {
+            actualModel = model.replace('anthropic/', '');
+          } else if (isOpenAI) {
+            actualModel = model.replace('openai/', '');
+          } else if (isGoogle) {
+            actualModel = model.replace('google/', '');
+          } else if (isKimiGroq) {
+            actualModel = 'moonshotai/kimi-k2-instruct-0905';
+          } else {
+            actualModel = model;
+          }
+        } else if (isAnthropic) {
           actualModel = model.replace('anthropic/', '');
         } else if (isOpenAI) {
           actualModel = model.replace('openai/', '');

@@ -7,23 +7,25 @@ import { generateObject } from 'ai';
 import { z } from 'zod';
 // import type { FileManifest } from '@/types/file-manifest'; // Type is used implicitly through manifest parameter
 
-// Check if we're using Vercel AI Gateway
-const isUsingAIGateway = !!process.env.AI_GATEWAY_API_KEY;
-const aiGatewayBaseURL = 'https://ai-gateway.vercel.sh/v1';
+// Custom AI Gateway configuration
+// Use custom gateway if API key and base URL are set via environment variables
+const customGatewayKey = process.env.AI_GATEWAY_API_KEY || '';
+const customGatewayURL = process.env.AI_GATEWAY_BASE_URL || '';
+const isUsingAIGateway = !!customGatewayKey && !!customGatewayURL;
 
 const groq = createGroq({
-  apiKey: process.env.AI_GATEWAY_API_KEY ?? process.env.GROQ_API_KEY,
-  baseURL: isUsingAIGateway ? aiGatewayBaseURL : undefined,
+  apiKey: isUsingAIGateway ? customGatewayKey : process.env.GROQ_API_KEY,
+  baseURL: isUsingAIGateway ? customGatewayURL : undefined,
 });
 
 const anthropic = createAnthropic({
-  apiKey: process.env.AI_GATEWAY_API_KEY ?? process.env.ANTHROPIC_API_KEY,
-  baseURL: isUsingAIGateway ? aiGatewayBaseURL : (process.env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com/v1'),
+  apiKey: isUsingAIGateway ? customGatewayKey : process.env.ANTHROPIC_API_KEY,
+  baseURL: isUsingAIGateway ? customGatewayURL : (process.env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com/v1'),
 });
 
 const openai = createOpenAI({
-  apiKey: process.env.AI_GATEWAY_API_KEY ?? process.env.OPENAI_API_KEY,
-  baseURL: isUsingAIGateway ? aiGatewayBaseURL : process.env.OPENAI_BASE_URL,
+  apiKey: isUsingAIGateway ? customGatewayKey : process.env.OPENAI_API_KEY,
+  baseURL: isUsingAIGateway ? customGatewayURL : process.env.OPENAI_BASE_URL,
 });
 
 const openrouter = createOpenAI({
@@ -32,8 +34,8 @@ const openrouter = createOpenAI({
 });
 
 const googleGenerativeAI = createGoogleGenerativeAI({
-  apiKey: process.env.AI_GATEWAY_API_KEY ?? process.env.GEMINI_API_KEY,
-  baseURL: isUsingAIGateway ? aiGatewayBaseURL : undefined,
+  apiKey: isUsingAIGateway ? customGatewayKey : process.env.GEMINI_API_KEY,
+  baseURL: isUsingAIGateway ? customGatewayURL : undefined,
 });
 
 // Schema for the AI's search plan - not file selection!

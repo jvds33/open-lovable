@@ -3,7 +3,6 @@
 import { animate } from "motion";
 import { useEffect, useRef, useState } from "react";
 
-import CurvyRect from "@/components/shared/layout/curvy-rect";
 import { sleep } from "@/utils/sleep";
 
 import BrowserMobile from "./_svg/BrowserMobile";
@@ -158,7 +157,6 @@ export default function HeroScraping() {
 
       <div className="overlay lg-max:hidden">
         <div className="h-1 absolute bottom-0 w-full left-0 bg-border-faint" />
-        <CurvyRect className="overlay" bottom />
       </div>
 
       <div className="lg:h-370 rounded-t-16 lg-max:pt-70 relative">
@@ -238,15 +236,6 @@ export default function HeroScraping() {
 
               <div className="lg:grid grid-cols-2">
                 <div className="pt-40 pl-151 flex gap-16 relative lg-max:hidden">
-                  <CurvyRect
-                    className="size-32 -top-1 -right-1 absolute"
-                    topRight
-                  />
-
-                  <div className="h-53 lg-max:hidden -left-37 bottom-1 absolute w-65">
-                    <CurvyRect className="overlay" left />
-                  </div>
-
                   <div>
                     <div
                       className="flex gap-16 mb-16 flex-wrap w-300 relative"

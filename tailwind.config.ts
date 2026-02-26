@@ -76,8 +76,7 @@ const themeConfig: Config = {
     extend: {
       fontFamily: {
         sans: ["var(--font-geist-sans)", "var(--font-inter)", ...defaultTheme.fontFamily.sans],
-        mono: ["var(--font-geist-mono)", ...defaultTheme.fontFamily.mono],
-        ascii: ["var(--font-roboto-mono)", ...defaultTheme.fontFamily.mono]
+        mono: ["var(--font-geist-mono)", ...defaultTheme.fontFamily.mono]
       },
       fontSize: {
         "title-h1": [
@@ -309,22 +308,15 @@ const themeConfig: Config = {
       transitionDelay: {
         ...transitionDurations
       },
-      borderRadius: (() => {
-        const radius: Record<string | number, string> = {
-          full: "999px",
-          inherit: "inherit",
-          0: "0px",
-          lg: "var(--radius)",
-          md: "calc(var(--radius) - 2px)",
-          sm: "calc(var(--radius) - 4px)",
-        };
-
-        for (let i = 1; i <= 32; i += 1) {
-          radius[i] = `${i}px`;
-        }
-
-        return radius;
-      })()
+      borderRadius: {
+        none: '0',
+        sm: '4px',
+        DEFAULT: '6px',
+        md: '8px',
+        lg: '12px',
+        xl: '16px',
+        full: '9999px'
+      }
     }
   },
   plugins: [
@@ -342,61 +334,12 @@ const themeConfig: Config = {
         ".center-y": { "@apply absolute top-1/2 -translate-y-1/2": {} },
         ".center": { "@apply absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2": {} },
         ".flex-center": { "@apply flex items-center justify-center": {} },
-        ".overlay": { "@apply absolute top-0 left-0 w-full h-full rounded-inherit": {} },
+        ".overlay": {
+          "@apply absolute top-0 left-0 w-full h-full": {},
+          "border-radius": "inherit"
+        },
         ".text-gradient": { "@apply !bg-clip-text !text-transparent": {} }
       });
-      matchUtilities(
-        {
-          'cw': (value: string) => {
-            const width = parseInt(value);
-
-            return {
-              width: value,
-              left: `calc(50% - ${width / 2}px)`
-            };
-          },
-          'ch': (value: string) => {
-            const height = parseInt(value);
-
-            return {
-              height: value,
-              top: `calc(50% - ${height / 2}px)`
-            };
-          },
-          'cs': (value: string) => {
-            const size = parseInt(value);
-
-            return {
-              width: size,
-              height: size,
-              left: `calc(50% - ${size / 2}px)`,
-              top: `calc(50% - ${size / 2}px)`
-            };
-          },
-          'cmw': (value: string) => {
-            const [maxWidth, paddingX] = value.split(',').map((v) => parseInt(v));
-
-            const width = paddingX ? `calc(100% - ${paddingX * 2}px)` : '100%';
-
-            return {
-              maxWidth: maxWidth,
-              width,
-              left: `calc(50% - (min(${maxWidth}px, ${width}) / 2))`
-            };
-          },
-          'mw': (value: string) => {
-            const [maxWidth, paddingX] = value.split(',').map((v) => parseInt(v));
-
-            const width = paddingX ? `calc(100% - ${paddingX * 2}px)` : '100%';
-
-            return {
-              maxWidth: maxWidth,
-              width
-            };
-          }
-        },
-        { values: sizes }
-      );
     },
     require("tailwind-gradient-mask-image"),
     require("@tailwindcss/typography"),

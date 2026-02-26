@@ -54,7 +54,7 @@ export function DotGridLoader({
                 : undefined
             }
             style={{ width: size, height: size }}
-            className="rounded-[2px] bg-heat-100"
+            className="rounded-[2px] bg-#000000"
           />
         );
       })}

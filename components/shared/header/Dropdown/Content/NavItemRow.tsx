@@ -23,7 +23,7 @@ export function NavItemRow({
   return (
     <a
       className={cn(
-        "flex items-start gap-16 py-16 pl-24 lg-max:[&_svg]:size-24 lg:pl-44 group border-x hover:bg-black-alpha-2 border-b border-border-faint transition-all hover:text-heat-100",
+        "flex items-start gap-16 py-16 pl-24 lg-max:[&_svg]:size-24 lg:pl-44 group border-x hover:bg-black-alpha-2 border-b border-border-faint transition-all hover:text-#000000",
         className,
       )}
       href={href}
@@ -61,7 +61,7 @@ export function NavItemRowBig({
       <div className="min-w-0 flex-1">
         <a
           href={href}
-          className="text-label-medium inline-block hover:text-heat-100 transition-colors"
+          className="text-label-medium inline-block hover:text-#000000 transition-colors"
         >
           {label}
         </a>
@@ -77,7 +77,7 @@ export function NavItemRowBig({
                 key={cta.label}
                 href={cta.href}
                 target={cta.target}
-                className="inline-flex items-center gap-6 px-12 py-6 rounded-6 text-label-small text-heat-100 bg-heat-4 hover:bg-heat-8 transition-colors whitespace-nowrap shrink-0"
+                className="inline-flex items-center gap-6 px-12 py-6 rounded-6 text-label-small text-#000000 bg-heat-4 hover:bg-heat-8 transition-colors whitespace-nowrap shrink-0"
               >
                 <span>{cta.label}</span>
                 <ArrowUpRight className="size-14" aria-hidden="true" />

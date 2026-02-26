@@ -185,7 +185,7 @@ export default function RadarChart({ data, size = 300 }: RadarChartProps) {
                 y={y + dy + 12}
                 textAnchor={textAnchor as any}
                 dominantBaseline="middle"
-                className="text-[10px] fill-heat-100 font-bold"
+                className="text-[10px] fill-#000000 font-bold"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.1 + i * 0.05 }}
@@ -202,11 +202,11 @@ export default function RadarChart({ data, size = 300 }: RadarChartProps) {
       <div className="mt-16 flex justify-center">
         <div className="inline-flex flex-row gap-16 text-xs text-black-alpha-48 bg-white px-16 py-8 rounded-6 shadow-sm">
           <div className="flex items-center gap-8">
-            <div className="w-12 h-12 rounded-full bg-heat-200" />
+            <div className="w-12 h-12 rounded-full bg-#171717" />
             <span className="whitespace-nowrap">80-100%</span>
           </div>
           <div className="flex items-center gap-8">
-            <div className="w-12 h-12 rounded-full bg-heat-100" />
+            <div className="w-12 h-12 rounded-full bg-#000000" />
             <span className="whitespace-nowrap">60-79%</span>
           </div>
           <div className="flex items-center gap-8">

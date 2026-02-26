@@ -18,7 +18,7 @@ export default function Toggle({
     <button
       className={cn(
         "transition-all relative rounded-full group",
-        checked ? "bg-heat-100" : "bg-black-alpha-10",
+        checked ? "bg-black" : "bg-gray-300",
       )}
       style={{
         width: "50px",
@@ -49,7 +49,7 @@ export default function Toggle({
         animate={{
           x: checked ? 18 : 0,
         }}
-        className="top-[2px] left-[2px] transition-[box-shadow] absolute rounded-full bg-accent-white"
+        className="top-[2px] left-[2px] transition-[box-shadow] absolute rounded-full bg-white"
         initial={{
           x: checked ? 18 : 0,
         }}
