@@ -123,6 +123,18 @@ async def check_status():
     return StatusResponse(**status)
 
 
+BRIDGE_SHARED_SECRET = os.getenv("BRIDGE_SHARED_SECRET", "")
+
+
+def verify_bridge_secret(request: Request):
+    """Verify X-Bridge-Secret header if BRIDGE_SHARED_SECRET is set."""
+    if not BRIDGE_SHARED_SECRET:
+        return  # No secret configured (local dev), skip check
+    provided = request.headers.get("X-Bridge-Secret", "")
+    if provided != BRIDGE_SHARED_SECRET:
+        raise HTTPException(status_code=403, detail="Invalid or missing bridge secret")
+
+
 @app.post("/api/claude-code/generate")
 async def generate_code_stream(http_request: Request, request: GenerateRequest):
     """
@@ -135,6 +147,9 @@ async def generate_code_stream(http_request: Request, request: GenerateRequest):
     Returns:
         StreamingResponse: Server-Sent Events (SSE) format streaming response
     """
+    # Shared secret check
+    verify_bridge_secret(http_request)
+
     # Rate limiting
     ip = http_request.client.host if http_request.client else "unknown"
     rate_limit_ip(ip)

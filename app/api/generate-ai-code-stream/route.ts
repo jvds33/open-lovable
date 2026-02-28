@@ -152,6 +152,9 @@ START NOW - Write src/index.css first, then App.jsx, then components. NO explana
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            ...(process.env.BRIDGE_SHARED_SECRET && {
+              'X-Bridge-Secret': process.env.BRIDGE_SHARED_SECRET,
+            }),
           },
           body: JSON.stringify({
             prompt,
@@ -327,10 +330,16 @@ START NOW - Write src/index.css first, then App.jsx, then components. NO explana
                         break;
 
                       case 'error':
-                        // Forward error messages
+                        // Skip non-fatal errors (e.g. SDK rate_limit_event noise)
+                        const errorText = pythonMsg.message || pythonMsg.error || '';
+                        if (errorText.includes('rate_limit_event')) {
+                          console.log('[generate-ai-code-stream] Ignoring non-fatal rate_limit_event');
+                          continue;
+                        }
+                        // Forward real error messages
                         frontendMsg = {
                           type: 'error',
-                          error: pythonMsg.message || pythonMsg.error || 'Unknown error'
+                          error: errorText || 'Unknown error'
                         };
                         break;
 
