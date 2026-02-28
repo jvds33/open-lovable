@@ -1,9 +1,5 @@
 import { NextResponse } from 'next/server';
 
-declare global {
-  var activeSandbox: any;
-}
-
 export async function GET() {
   try {
     if (!global.activeSandbox) {

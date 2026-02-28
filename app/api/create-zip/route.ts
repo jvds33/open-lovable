@@ -1,10 +1,5 @@
 import { NextResponse } from 'next/server';
 
-declare global {
-  var activeSandbox: any;
-  var activeSandboxProvider: any;
-}
-
 export async function POST() {
   try {
     // Check both V2 provider (new) and V1 sandbox (legacy) patterns

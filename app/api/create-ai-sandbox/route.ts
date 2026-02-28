@@ -3,15 +3,6 @@ import { Sandbox } from '@vercel/sandbox';
 import type { SandboxState } from '@/types/sandbox';
 import { appConfig } from '@/config/app.config';
 
-// Store active sandbox globally
-declare global {
-  var activeSandbox: any;
-  var sandboxData: any;
-  var existingFiles: Set<string>;
-  var sandboxState: SandboxState;
-  var sandboxCreationInProgress: boolean;
-  var sandboxCreationPromise: Promise<any> | null;
-}
 
 export async function POST() {
   // Check if sandbox creation is already in progress

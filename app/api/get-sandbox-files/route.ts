@@ -3,10 +3,6 @@ import { parseJavaScriptFile, buildComponentTree } from '@/lib/file-parser';
 import { FileManifest, FileInfo, RouteInfo } from '@/types/file-manifest';
 // SandboxState type used implicitly through global.activeSandbox
 
-declare global {
-  var activeSandbox: any;
-}
-
 export async function GET() {
   try {
     if (!global.activeSandbox) {

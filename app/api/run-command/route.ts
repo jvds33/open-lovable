@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Get active sandbox from global state (in production, use a proper state management solution)
-declare global {
-  var activeSandbox: any;
-}
-
 export async function POST(request: NextRequest) {
   try {
     const { command } = await request.json();

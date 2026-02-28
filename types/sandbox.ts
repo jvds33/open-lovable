@@ -24,8 +24,12 @@ export interface SandboxState {
 // Declare global types
 declare global {
   var activeSandbox: Sandbox | null;
+  var activeSandboxProvider: any;
+  var sandboxData: any;
   var sandboxState: SandboxState;
   var existingFiles: Set<string>;
+  var sandboxCreationInProgress: boolean;
+  var sandboxCreationPromise: Promise<any> | null;
 }
 
 export {};
