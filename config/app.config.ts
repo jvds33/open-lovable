@@ -87,6 +87,7 @@ export const appConfig = {
     availableModels: [
       'openai/gpt-5',
       'moonshotai/kimi-k2-instruct-0905',
+      'anthropic/claude-opus-4-6',
       'anthropic/claude-sonnet-4-5-20250929',
       'anthropic/claude-sonnet-4-20250514',
       'google/gemini-2.0-flash-exp',
@@ -101,6 +102,7 @@ export const appConfig = {
     modelDisplayNames: {
       'openai/gpt-5': 'GPT-5',
       'moonshotai/kimi-k2-instruct-0905': 'Kimi K2 (Groq)',
+      'anthropic/claude-opus-4-6': 'Opus 4.6 (Claude Code CLI)',
       'anthropic/claude-sonnet-4-5-20250929': 'Sonnet 4.5 (Claude Code CLI)',
       'anthropic/claude-sonnet-4-20250514': 'Sonnet 4',
       'google/gemini-2.0-flash-exp': 'Gemini 2.0 Flash (Experimental)',

@@ -68,6 +68,7 @@ class ClaudeCodeAdapter:
                 "configured": True,
                 "mode": "CLI",
                 "models": [
+                    "claude-opus-4-6",
                     "claude-sonnet-4-5-20250929",
                     "claude-opus-4-1-20250805",
                 ],
@@ -243,6 +244,12 @@ class ClaudeCodeAdapter:
                                     if block.name == "Write" and isinstance(block.input, dict):
                                         file_path = block.input.get("file_path", "")
                                         content = block.input.get("content", "")
+
+                                        # Convert absolute paths to relative (frontend expects src/App.jsx, not /full/path/src/App.jsx)
+                                        cwd = os.getcwd()
+                                        if file_path.startswith(cwd):
+                                            file_path = os.path.relpath(file_path, cwd)
+
                                         logger.info(f"Write file: {file_path} ({len(content)} chars)")
 
                                         # Collect files
@@ -262,42 +269,51 @@ class ClaudeCodeAdapter:
                     elif isinstance(message_obj, ResultMessage) or (
                         hasattr(message_obj, "type") and getattr(message_obj, "type", None) == "result"
                     ):
-                        # If files were generated, format them for frontend
-                        if generated_files:
-                            logger.info(f"Generated {len(generated_files)} files in total")
-
-                            # Format as XML (expected by frontend)
-                            generated_code_parts = []
-                            for file_info in generated_files:
-                                generated_code_parts.append(
-                                    f'<file path="{file_info["path"]}">\n{file_info["content"]}\n</file>'
-                                )
-                            generated_code = "\n\n".join(generated_code_parts)
-
-                            # Send message containing all files
-                            yield {
-                                "type": "files_generated",
-                                "files": generated_files,
-                                "generatedCode": generated_code,
-                                "files_count": len(generated_files),
-                            }
-
-                        yield {
-                            "type": "complete",
-                            "duration_ms": getattr(message_obj, "duration_ms", 0),
-                            "total_cost_usd": getattr(message_obj, "total_cost_usd", 0),
-                            "session_id": getattr(message_obj, "session_id", claude_session_id),
-                        }
+                        # Result handled after the loop
                         break
 
+                    else:
+                        # Skip unknown message types (e.g. rate_limit_event)
+                        msg_type = getattr(message_obj, "type", type(message_obj).__name__)
+                        logger.info(f"Skipping unknown message type: {msg_type}")
+
+                # files_generated + complete are emitted in the finally block
+
         except Exception as e:
-            logger.error(f"Error: {str(e)}")
-            yield {
-                "type": "error",
-                "error": str(e),
-            }
-            raise
+            logger.error(f"Streaming error (may be non-fatal): {str(e)}")
+            # Don't yield error if we already have files — the stream likely completed
+            # (e.g. rate_limit_event from SDK after generation is done)
+            if not generated_files:
+                yield {
+                    "type": "error",
+                    "error": str(e),
+                }
         finally:
+            # Always emit collected files + complete, even if stream ended with an exception
+            if generated_files:
+                logger.info(f"Emitting {len(generated_files)} generated files")
+
+                generated_code_parts = []
+                for file_info in generated_files:
+                    generated_code_parts.append(
+                        f'<file path="{file_info["path"]}">\n{file_info["content"]}\n</file>'
+                    )
+                generated_code = "\n\n".join(generated_code_parts)
+
+                yield {
+                    "type": "files_generated",
+                    "files": generated_files,
+                    "generatedCode": generated_code,
+                    "files_count": len(generated_files),
+                }
+
+                yield {
+                    "type": "complete",
+                    "duration_ms": 0,
+                    "total_cost_usd": 0,
+                    "session_id": claude_session_id if 'claude_session_id' in dir() else None,
+                }
+
             # Restore original working directory
             os.chdir(original_cwd)
             logger.info(f"Restored working directory to: {original_cwd}")
