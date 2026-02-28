@@ -30,7 +30,7 @@ const openai = createOpenAI({
 
 const openrouter = createOpenAI({
   apiKey: process.env.AI_GATEWAY_API_KEY ?? process.env.OPENROUTER_API_KEY,
-  baseURL: isUsingAIGateway ? aiGatewayBaseURL : 'https://openrouter.ai/api/v1',
+  baseURL: isUsingAIGateway ? customGatewayURL : 'https://openrouter.ai/api/v1',
 });
 
 const googleGenerativeAI = createGoogleGenerativeAI({
