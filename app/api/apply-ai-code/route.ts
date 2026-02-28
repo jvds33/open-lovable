@@ -127,13 +127,6 @@ function parseAIResponse(response: string): ParsedResponse {
   return sections;
 }
 
-declare global {
-  var activeSandbox: any;
-  var activeSandboxProvider: any;
-  var existingFiles: Set<string>;
-  var sandboxState: SandboxState;
-}
-
 export async function POST(request: NextRequest) {
   try {
     const { response, isEdit = false, packages = [] } = await request.json();
